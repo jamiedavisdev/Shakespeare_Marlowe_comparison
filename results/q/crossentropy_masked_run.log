@@ -1,0 +1,46 @@
+variant=masked alphabet=30 order=6 budget=273328 chars
+masked names in 2H6: ["alban's", 'albon', 'anjoy', 'armourer', 'berwick', 'bewford', 'buckingham', 'bullenbrooke', 'cade', 'cardinal', 'clarence', 'clifford', 'comberland', 'dick', 'earl', 'edward', 'elinor', 'england', "england's", 'english', 'france', 'french', 'gaunt', 'george', 'gloster', 'god', 'henry', "henry's", 'humphrey', 'humphreys', 'ireland', 'irish', 'kent', 'king', 'kings', 'knight', 'lancaster', 'london', 'madam', 'maine']
+2H6      Marlowe=2.196 Sh-early=2.509 Sh-later=2.225 Greene=2.283 Peele=2.264 Anon-heroic=2.206
+3H6      Marlowe=2.197 Sh-early=2.436 Sh-later=2.249 Greene=2.280 Peele=2.269 Anon-heroic=2.164
+Tit      Marlowe=2.229 Sh-early=2.259 Sh-later=2.296 Greene=2.349 Peele=2.291 Anon-heroic=2.220
+R3       Marlowe=2.260 Sh-early=2.507 Sh-later=2.216 Greene=2.341 Peele=2.324 Anon-heroic=2.223
+R2       Marlowe=2.304 Sh-early=2.255 Sh-later=2.268 Greene=2.389 Peele=2.356 Anon-heroic=2.254
+Rom      Marlowe=2.363 Sh-early=2.334 Sh-later=2.280 Greene=2.394 Peele=2.441 Anon-heroic=2.331
+1H4      Marlowe=2.374 Sh-early=2.347 Sh-later=2.264 Greene=2.438 Peele=2.438 Anon-heroic=2.339
+LLL      Marlowe=2.514 Sh-early=2.522 Sh-later=2.394 Greene=2.541 Peele=2.597 Anon-heroic=2.468
+MND      Marlowe=2.409 Sh-early=2.421 Sh-later=2.322 Greene=2.442 Peele=2.474 Anon-heroic=2.387
+MV       Marlowe=2.318 Sh-early=2.330 Sh-later=2.205 Greene=2.378 Peele=2.410 Anon-heroic=2.289
+Ado      Marlowe=2.293 Sh-early=2.266 Sh-later=2.123 Greene=2.313 Peele=2.373 Anon-heroic=2.254
+2H4      Marlowe=2.403 Sh-early=2.353 Sh-later=2.258 Greene=2.466 Peele=2.441 Anon-heroic=2.352
+Lr       Marlowe=2.367 Sh-early=2.355 Sh-later=2.265 Greene=2.418 Peele=2.433 Anon-heroic=2.324
+Tro      Marlowe=2.424 Sh-early=2.449 Sh-later=2.331 Greene=2.505 Peele=2.513 Anon-heroic=2.408
+1Tam     Marlowe=2.312 Sh-early=2.407 Sh-later=2.436 Greene=2.323 Peele=2.275 Anon-heroic=2.291
+2Tam     Marlowe=2.310 Sh-early=2.414 Sh-later=2.415 Greene=2.356 Peele=2.294 Anon-heroic=2.322
+Dido     Marlowe=2.284 Sh-early=2.376 Sh-later=2.405 Greene=2.349 Peele=2.382 Anon-heroic=2.328
+DrFaust  Marlowe=2.336 Sh-early=2.416 Sh-later=2.367 Greene=2.366 Peele=2.416 Anon-heroic=2.356
+JoM      Marlowe=2.276 Sh-early=2.310 Sh-later=2.297 Greene=2.365 Peele=2.370 Anon-heroic=2.273
+Ed2      Marlowe=2.150 Sh-early=2.113 Sh-later=2.206 Greene=2.231 Peele=2.195 Anon-heroic=2.145
+MP       Marlowe=2.103 Sh-early=2.137 Sh-later=2.234 Greene=2.228 Peele=2.203 Anon-heroic=2.113
+ST       Marlowe=2.219 Sh-early=2.244 Sh-later=2.285 Greene=2.293 Peele=2.318 Anon-heroic=2.210
+OWT      Marlowe=2.342 Sh-early=2.357 Sh-later=2.297 Greene=2.329 Peele=2.412 Anon-heroic=2.303
+Gal      Marlowe=2.260 Sh-early=2.317 Sh-later=2.231 Greene=2.268 Peele=2.323 Anon-heroic=2.232
+AShrew   Marlowe=2.145 Sh-early=2.181 Sh-later=2.166 Greene=2.145 Peele=2.236 Anon-heroic=2.172
+TCKL     Marlowe=2.186 Sh-early=2.192 Sh-later=2.171 Greene=2.214 Peele=2.270 Anon-heroic=2.131
+Alphonsus Marlowe=2.209 Sh-early=2.284 Sh-later=2.341 Greene=2.280 Peele=2.282 Anon-heroic=2.179
+Orlando  Marlowe=2.327 Sh-early=2.453 Sh-later=2.460 Greene=2.413 Peele=2.419 Anon-heroic=2.350
+FriarBacon Marlowe=2.368 Sh-early=2.471 Sh-later=2.447 Greene=2.478 Peele=2.460 Anon-heroic=2.439
+JamesIV  Marlowe=2.310 Sh-early=2.319 Sh-later=2.310 Greene=2.391 Peele=2.375 Anon-heroic=2.271
+Alcazar  Marlowe=2.191 Sh-early=2.298 Sh-later=2.392 Greene=2.330 Peele=2.320 Anon-heroic=2.221
+EdwardI  Marlowe=2.283 Sh-early=2.298 Sh-later=2.338 Greene=2.327 Peele=2.398 Anon-heroic=2.287
+David    Marlowe=2.183 Sh-early=2.271 Sh-later=2.325 Greene=2.307 Peele=2.312 Anon-heroic=2.259
+Wounds   Marlowe=2.283 Sh-early=2.335 Sh-later=2.430 Greene=2.325 Peele=2.373 Anon-heroic=2.312
+Soliman  Marlowe=2.238 Sh-early=2.278 Sh-later=2.290 Greene=2.297 Peele=2.323 Anon-heroic=2.220
+Locrine  Marlowe=2.361 Sh-early=2.475 Sh-later=2.510 Greene=2.428 Peele=2.429 Anon-heroic=2.421
+Selimus  Marlowe=2.262 Sh-early=2.315 Sh-later=2.367 Greene=2.352 Peele=2.341 Anon-heroic=2.256
+TRKJ     Marlowe=2.291 Sh-early=2.267 Sh-later=2.327 Greene=2.368 Peele=2.350 Anon-heroic=2.258
+JackStraw Marlowe=2.171 Sh-early=2.142 Sh-later=2.171 Greene=2.255 Peele=2.194 Anon-heroic=2.092
+EdwardIII Marlowe=2.242 Sh-early=2.260 Sh-later=2.271 Greene=2.360 Peele=2.324 Anon-heroic=2.249
+Arden    Marlowe=2.265 Sh-early=2.259 Sh-later=2.242 Greene=2.308 Peele=2.363 Anon-heroic=2.256
+TTR3     Marlowe=2.144 Sh-early=2.421 Sh-later=2.175 Greene=2.215 Peele=2.213 Anon-heroic=2.091
+Endymion Marlowe=2.259 Sh-early=2.307 Sh-later=2.219 Greene=2.300 Peele=2.328 Anon-heroic=2.220
+done

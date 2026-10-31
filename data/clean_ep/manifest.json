@@ -1,0 +1,653 @@
+[
+ {
+  "id": "2H6",
+  "title": "Henry VI, Part 2",
+  "author": "Shakespeare",
+  "group": "shakespeare_early",
+  "date": 1591,
+  "source": "earlyprint",
+  "file": "data/raw/earlyprint/A11954.xml",
+  "note": "1623 Folio text (EarlyPrint)",
+  "select": {
+   "head": "second Part of Henry the Sixt"
+  },
+  "words": 24635,
+  "lines": 2868
+ },
+ {
+  "id": "3H6",
+  "title": "Henry VI, Part 3",
+  "author": "Shakespeare",
+  "group": "shakespeare_early",
+  "date": 1591,
+  "source": "earlyprint",
+  "file": "data/raw/earlyprint/A11954.xml",
+  "note": "1623 Folio text (EarlyPrint)",
+  "select": {
+   "head": "third Part of Henry the Sixt"
+  },
+  "words": 23511,
+  "lines": 2963
+ },
+ {
+  "id": "1H6",
+  "title": "Henry VI, Part 1",
+  "author": "Shakespeare",
+  "group": "shakespeare_early",
+  "date": 1592,
+  "source": "earlyprint",
+  "file": "data/raw/earlyprint/A11954.xml",
+  "note": "1623 Folio text (EarlyPrint)",
+  "select": {
+   "head": "first Part of Henry the Sixt"
+  },
+  "words": 20679,
+  "lines": 2698
+ },
+ {
+  "id": "Tit",
+  "title": "Titus Andronicus",
+  "author": "Shakespeare",
+  "group": "shakespeare_early",
+  "date": 1592,
+  "source": "earlyprint",
+  "file": "data/raw/earlyprint/A11954.xml",
+  "note": "1623 Folio text (EarlyPrint)",
+  "select": {
+   "head": "Titus Andronicus"
+  },
+  "words": 19923,
+  "lines": 2569
+ },
+ {
+  "id": "R3",
+  "title": "Richard III",
+  "author": "Shakespeare",
+  "group": "shakespeare_early",
+  "date": 1593,
+  "source": "earlyprint",
+  "file": "data/raw/earlyprint/A11954.xml",
+  "select": {
+   "head": "Richard the Third"
+  },
+  "note": "1623 Folio text (EarlyPrint)",
+  "words": 28272,
+  "lines": 3656
+ },
+ {
+  "id": "Shr",
+  "title": "The Taming of the Shrew",
+  "author": "Shakespeare",
+  "group": "shakespeare_early",
+  "date": 1592,
+  "source": "earlyprint",
+  "file": "data/raw/earlyprint/A11954.xml",
+  "select": {
+   "head": "Taming of the Shrew"
+  },
+  "note": "1623 Folio text (EarlyPrint)",
+  "words": 20680,
+  "lines": 2333
+ },
+ {
+  "id": "TGV",
+  "title": "The Two Gentlemen of Verona",
+  "author": "Shakespeare",
+  "group": "shakespeare_early",
+  "date": 1591,
+  "source": "earlyprint",
+  "file": "data/raw/earlyprint/A11954.xml",
+  "select": {
+   "head": "Two Gentlemen of Verona"
+  },
+  "note": "1623 Folio text (EarlyPrint)",
+  "words": 17063,
+  "lines": 2039
+ },
+ {
+  "id": "Err",
+  "title": "The Comedy of Errors",
+  "author": "Shakespeare",
+  "group": "shakespeare_early",
+  "date": 1594,
+  "source": "earlyprint",
+  "file": "data/raw/earlyprint/A11954.xml",
+  "select": {
+   "head": "Comedie of Errors"
+  },
+  "note": "1623 Folio text (EarlyPrint)",
+  "words": 14518,
+  "lines": 1641
+ },
+ {
+  "id": "R2",
+  "title": "Richard II",
+  "author": "Shakespeare",
+  "group": "shakespeare_later",
+  "date": 1595,
+  "source": "earlyprint",
+  "file": "data/raw/earlyprint/A11954.xml",
+  "select": {
+   "head": "Richard the Second"
+  },
+  "note": "1623 Folio text (EarlyPrint)",
+  "words": 21494,
+  "lines": 2735
+ },
+ {
+  "id": "MND",
+  "title": "A Midsummer Night's Dream",
+  "author": "Shakespeare",
+  "group": "shakespeare_later",
+  "date": 1595,
+  "source": "earlyprint",
+  "file": "data/raw/earlyprint/A11954.xml",
+  "select": {
+   "head": "MIDSOMMER"
+  },
+  "note": "1623 Folio text (EarlyPrint)",
+  "words": 16133,
+  "lines": 1871
+ },
+ {
+  "id": "Rom",
+  "title": "Romeo and Juliet",
+  "author": "Shakespeare",
+  "group": "shakespeare_later",
+  "date": 1595,
+  "source": "earlyprint",
+  "file": "data/raw/earlyprint/A11954.xml",
+  "select": {
+   "head": "ROMEO"
+  },
+  "note": "1623 Folio text (EarlyPrint)",
+  "words": 24085,
+  "lines": 2828
+ },
+ {
+  "id": "MV",
+  "title": "The Merchant of Venice",
+  "author": "Shakespeare",
+  "group": "shakespeare_later",
+  "date": 1596,
+  "source": "earlyprint",
+  "file": "data/raw/earlyprint/A11954.xml",
+  "select": {
+   "head": "Merchant of Venice"
+  },
+  "note": "1623 Folio text (EarlyPrint)",
+  "words": 21079,
+  "lines": 2272
+ },
+ {
+  "id": "1H4",
+  "title": "Henry IV, Part 1",
+  "author": "Shakespeare",
+  "group": "shakespeare_later",
+  "date": 1597,
+  "source": "earlyprint",
+  "file": "data/raw/earlyprint/A11954.xml",
+  "select": {
+   "head": "First Part of Henry the Fourth"
+  },
+  "note": "1623 Folio text (EarlyPrint)",
+  "words": 24052,
+  "lines": 2204
+ },
+ {
+  "id": "JC",
+  "title": "Julius Caesar",
+  "author": "Shakespeare",
+  "group": "shakespeare_later",
+  "date": 1599,
+  "source": "earlyprint",
+  "file": "data/raw/earlyprint/A11954.xml",
+  "select": {
+   "head": "CAESAR"
+  },
+  "note": "1623 Folio text (EarlyPrint)",
+  "words": 19261,
+  "lines": 2510
+ },
+ {
+  "id": "Ham",
+  "title": "Hamlet",
+  "author": "Shakespeare",
+  "group": "shakespeare_later",
+  "date": 1600,
+  "source": "earlyprint",
+  "file": "data/raw/earlyprint/A11954.xml",
+  "select": {
+   "head": "HAMLET"
+  },
+  "note": "1623 Folio text (EarlyPrint)",
+  "words": 28146,
+  "lines": 3214
+ },
+ {
+  "id": "Mac",
+  "title": "Macbeth",
+  "author": "Shakespeare",
+  "group": "shakespeare_later",
+  "date": 1606,
+  "source": "earlyprint",
+  "file": "data/raw/earlyprint/A11954.xml",
+  "select": {
+   "head": "MACBETH"
+  },
+  "note": "1623 Folio text (EarlyPrint)",
+  "words": 16674,
+  "lines": 2310
+ },
+ {
+  "id": "Lr",
+  "title": "King Lear",
+  "author": "Shakespeare",
+  "group": "shakespeare_later",
+  "date": 1605,
+  "source": "earlyprint",
+  "file": "data/raw/earlyprint/A11954.xml",
+  "select": {
+   "head": "KING LEAR"
+  },
+  "note": "1623 Folio text (EarlyPrint)",
+  "words": 23445,
+  "lines": 2720
+ },
+ {
+  "id": "WT",
+  "title": "The Winter's Tale",
+  "author": "Shakespeare",
+  "group": "shakespeare_later",
+  "date": 1610,
+  "source": "earlyprint",
+  "file": "data/raw/earlyprint/A11954.xml",
+  "select": {
+   "head": "Winters Tale"
+  },
+  "note": "1623 Folio text (EarlyPrint)",
+  "words": 24892,
+  "lines": 2751
+ },
+ {
+  "id": "Tmp",
+  "title": "The Tempest",
+  "author": "Shakespeare",
+  "group": "shakespeare_later",
+  "date": 1611,
+  "source": "earlyprint",
+  "file": "data/raw/earlyprint/A11954.xml",
+  "select": {
+   "head": "TEMPEST"
+  },
+  "note": "1623 Folio text (EarlyPrint)",
+  "words": 16262,
+  "lines": 2061
+ },
+ {
+  "id": "1Tam",
+  "title": "Tamburlaine the Great, Part 1",
+  "author": "Marlowe",
+  "group": "marlowe",
+  "date": 1587,
+  "source": "earlyprint",
+  "file": "data/raw/earlyprint/A07004.xml",
+  "select": {
+   "text_index": 0
+  },
+  "words": 17228,
+  "lines": 2274
+ },
+ {
+  "id": "2Tam",
+  "title": "Tamburlaine the Great, Part 2",
+  "author": "Marlowe",
+  "group": "marlowe",
+  "date": 1588,
+  "source": "earlyprint",
+  "file": "data/raw/earlyprint/A07004.xml",
+  "select": {
+   "text_index": 1
+  },
+  "words": 17571,
+  "lines": 2295
+ },
+ {
+  "id": "Dido",
+  "title": "Dido, Queen of Carthage",
+  "author": "Marlowe",
+  "group": "marlowe",
+  "date": 1587,
+  "source": "earlyprint",
+  "file": "data/raw/earlyprint/A07023.xml",
+  "words": 13606,
+  "lines": 1734
+ },
+ {
+  "id": "DrFaust",
+  "title": "Doctor Faustus",
+  "author": "Marlowe",
+  "group": "marlowe",
+  "date": 1589,
+  "source": "earlyprint",
+  "file": "data/raw/earlyprint/A07009.xml",
+  "words": 11357,
+  "lines": 1066
+ },
+ {
+  "id": "JoM",
+  "title": "The Jew of Malta",
+  "author": "Marlowe",
+  "group": "marlowe",
+  "date": 1590,
+  "source": "earlyprint",
+  "file": "data/raw/earlyprint/A06991.xml",
+  "words": 18172,
+  "lines": 2363
+ },
+ {
+  "id": "Ed2",
+  "title": "Edward the Second",
+  "author": "Marlowe",
+  "group": "marlowe",
+  "date": 1592,
+  "source": "earlyprint",
+  "file": "data/raw/earlyprint/A07018.xml",
+  "words": 20622,
+  "lines": 2651
+ },
+ {
+  "id": "MP",
+  "title": "The Massacre at Paris",
+  "author": "Marlowe",
+  "group": "marlowe",
+  "date": 1593,
+  "source": "earlyprint",
+  "file": "data/raw/earlyprint/A07003.xml",
+  "words": 9692,
+  "lines": 1174
+ },
+ {
+  "id": "ST",
+  "title": "The Spanish Tragedy",
+  "author": "Kyd",
+  "group": "control",
+  "date": 1587,
+  "source": "earlyprint",
+  "file": "data/raw/earlyprint/A04942.xml",
+  "words": 20828,
+  "lines": 2743
+ },
+ {
+  "id": "OWT",
+  "title": "The Old Wives Tale",
+  "author": "Peele",
+  "group": "control",
+  "date": 1590,
+  "source": "earlyprint",
+  "file": "data/raw/earlyprint/A09232.xml",
+  "words": 7615,
+  "lines": 542
+ },
+ {
+  "id": "Gal",
+  "title": "Gallathea",
+  "author": "Lyly",
+  "group": "control",
+  "date": 1588,
+  "source": "earlyprint",
+  "file": "data/raw/earlyprint/A06619.xml",
+  "words": 13117,
+  "lines": 491
+ },
+ {
+  "id": "AShrew",
+  "title": "The Taming of a Shrew",
+  "author": "Anon-AShrew",
+  "group": "control",
+  "date": 1592,
+  "source": "earlyprint",
+  "file": "data/raw/earlyprint/A13358.xml",
+  "words": 12422,
+  "lines": 1504
+ },
+ {
+  "id": "TCKL",
+  "title": "The True Chronicle of King Leir",
+  "author": "Anon-Leir",
+  "group": "control",
+  "date": 1590,
+  "source": "earlyprint",
+  "file": "data/raw/earlyprint/A05206.xml",
+  "words": 21201,
+  "lines": 2502
+ },
+ {
+  "id": "Alphonsus",
+  "title": "The Comical History of Alphonsus, King of Aragon",
+  "author": "Greene",
+  "group": "control_ep",
+  "date": 1587,
+  "source": "earlyprint",
+  "file": "data/raw/earlyprint/A02091.xml",
+  "tcp": "A02091",
+  "words": 10956,
+  "lines": 1419
+ },
+ {
+  "id": "Orlando",
+  "title": "Orlando Furioso",
+  "author": "Greene",
+  "group": "control_ep",
+  "date": 1591,
+  "source": "earlyprint",
+  "file": "data/raw/earlyprint/A02125.xml",
+  "tcp": "A02125",
+  "words": 10828,
+  "lines": 1362
+ },
+ {
+  "id": "FriarBacon",
+  "title": "Friar Bacon and Friar Bungay",
+  "author": "Greene",
+  "group": "control_ep",
+  "date": 1589,
+  "source": "earlyprint",
+  "file": "data/raw/earlyprint/A02127.xml",
+  "tcp": "A02127",
+  "words": 15926,
+  "lines": 1790
+ },
+ {
+  "id": "JamesIV",
+  "title": "The Scottish History of James IV",
+  "author": "Greene",
+  "group": "control_ep",
+  "date": 1590,
+  "source": "earlyprint",
+  "file": "data/raw/earlyprint/A02168.xml",
+  "tcp": "A02168",
+  "words": 19930,
+  "lines": 2211
+ },
+ {
+  "id": "Alcazar",
+  "title": "The Battle of Alcazar",
+  "author": "Peele",
+  "group": "control_ep",
+  "date": 1589,
+  "source": "earlyprint",
+  "file": "data/raw/earlyprint/A09221.xml",
+  "tcp": "A09221",
+  "words": 10859,
+  "lines": 1454
+ },
+ {
+  "id": "EdwardI",
+  "title": "Edward I",
+  "author": "Peele",
+  "group": "control_ep",
+  "date": 1591,
+  "source": "earlyprint",
+  "file": "data/raw/earlyprint/A09224.xml",
+  "tcp": "A09224",
+  "words": 21408,
+  "lines": 2232
+ },
+ {
+  "id": "David",
+  "title": "David and Bethsabe",
+  "author": "Peele",
+  "group": "control_ep",
+  "date": 1594,
+  "source": "earlyprint",
+  "file": "data/raw/earlyprint/A09228.xml",
+  "tcp": "A09228",
+  "words": 14814,
+  "lines": 1919
+ },
+ {
+  "id": "Wounds",
+  "title": "The Wounds of Civil War",
+  "author": "Lodge",
+  "group": "control_ep",
+  "date": 1588,
+  "source": "earlyprint",
+  "file": "data/raw/earlyprint/A06184.xml",
+  "tcp": "A06184",
+  "words": 19323,
+  "lines": 2414
+ },
+ {
+  "id": "Soliman",
+  "title": "Soliman and Perseda",
+  "author": "Anon-Soliman",
+  "group": "control_ep",
+  "date": 1590,
+  "source": "earlyprint",
+  "file": "data/raw/earlyprint/A12578.xml",
+  "tcp": "A12578",
+  "words": 17648,
+  "lines": 2264
+ },
+ {
+  "id": "Locrine",
+  "title": "Locrine",
+  "author": "Anon-Locrine",
+  "group": "control_ep",
+  "date": 1591,
+  "source": "earlyprint",
+  "file": "data/raw/earlyprint/A11262.xml",
+  "tcp": "A11262",
+  "words": 15362,
+  "lines": 1880
+ },
+ {
+  "id": "Selimus",
+  "title": "Selimus",
+  "author": "Anon-Selimus",
+  "group": "control_ep",
+  "date": 1592,
+  "source": "earlyprint",
+  "file": "data/raw/earlyprint/A68114.xml",
+  "tcp": "A68114",
+  "words": 18269,
+  "lines": 2375
+ },
+ {
+  "id": "TRKJ",
+  "title": "The Troublesome Reign of King John",
+  "author": "Anon-TRKJ",
+  "group": "control_ep",
+  "date": 1589,
+  "source": "earlyprint",
+  "file": "data/raw/earlyprint/A68278.xml",
+  "tcp": "A68278",
+  "words": 13437,
+  "lines": 1551
+ },
+ {
+  "id": "JackStraw",
+  "title": "The Life and Death of Jack Straw",
+  "author": "Anon-JackStraw",
+  "group": "control_ep",
+  "date": 1591,
+  "source": "earlyprint",
+  "file": "data/raw/earlyprint/A13062.xml",
+  "tcp": "A13062",
+  "words": 7924,
+  "lines": 843
+ },
+ {
+  "id": "EdwardIII",
+  "title": "The Reign of King Edward III",
+  "author": "Anon-EdwardIII",
+  "group": "control_ep",
+  "date": 1593,
+  "source": "earlyprint",
+  "file": "data/raw/earlyprint/A21144.xml",
+  "tcp": "A21144",
+  "words": 19521,
+  "lines": 2503
+ },
+ {
+  "id": "Arden",
+  "title": "Arden of Faversham",
+  "author": "Anon-Arden",
+  "group": "control_ep",
+  "date": 1590,
+  "source": "earlyprint",
+  "file": "data/raw/earlyprint/A20951.xml",
+  "tcp": "A20951",
+  "words": 19865,
+  "lines": 2417
+ },
+ {
+  "id": "TTR3",
+  "title": "The True Tragedy of Richard III",
+  "author": "Anon-TTR3",
+  "group": "control_ep",
+  "date": 1591,
+  "source": "earlyprint",
+  "file": "data/raw/earlyprint/A10730.xml",
+  "tcp": "A10730",
+  "words": 19045,
+  "lines": 1146
+ },
+ {
+  "id": "Endymion",
+  "title": "Endymion",
+  "author": "Lyly",
+  "group": "control_ep",
+  "date": 1588,
+  "source": "earlyprint",
+  "file": "data/raw/earlyprint/A06589.xml",
+  "tcp": "A06589",
+  "words": 18405,
+  "lines": 713
+ },
+ {
+  "id": "Tit_Q",
+  "title": "Titus Andronicus (1594 quarto)",
+  "author": "Shakespeare",
+  "group": "altsource",
+  "date": 1592,
+  "source": "earlyprint",
+  "file": "data/raw/earlyprint/A12017.xml",
+  "note": "early quarto; edition check against the Folio text",
+  "words": 19315,
+  "lines": 2431
+ },
+ {
+  "id": "R3_Q",
+  "title": "Richard III (1597 quarto)",
+  "author": "Shakespeare",
+  "group": "altsource",
+  "date": 1593,
+  "source": "earlyprint",
+  "file": "data/raw/earlyprint/A12001.xml",
+  "note": "early quarto; edition check against the Folio text",
+  "words": 26881,
+  "lines": 3422
+ }
+]

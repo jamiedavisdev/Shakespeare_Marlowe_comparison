@@ -1,0 +1,85 @@
+W1030 17:19:34.280000 83714 torch/distributed/elastic/multiprocessing/redirects.py:35] NOTE: Redirects are currently not supported in MacOs.
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[transformers] Token indices sequence length is longer than the specified maximum sequence length for this model (25643 > 1024). Running this sequence through the model will result in indexing errors
+device=mps token budget per model=78818
+Loading weights:   0%|          | 0/148 [00:00<?, ?it/s]Loading weights: 100%|██████████| 148/148 [00:00<00:00, 14421.12it/s]
+== Marlowe_s1: 7 plays, seed 1
+Loading weights:   0%|          | 0/148 [00:00<?, ?it/s]Loading weights: 100%|██████████| 148/148 [00:00<00:00, 10459.43it/s]
+[transformers] `loss_type=None` was set in the config but it is unrecognized. Using the default loss: `ForCausalLMLoss`.
+    epoch 1 loss 4.252
+    epoch 2 loss 3.915
+    epoch 3 loss 3.745
+   done in 207s; bits/token on own training plays: 1Tam=5.53, 2Tam=5.46, Dido=5.40
+== Marlowe_s2: 7 plays, seed 2
+Loading weights:   0%|          | 0/148 [00:00<?, ?it/s]Loading weights: 100%|██████████| 148/148 [00:00<00:00, 7729.70it/s]
+    epoch 1 loss 4.251
+    epoch 2 loss 3.912
+    epoch 3 loss 3.743
+   done in 217s; bits/token on own training plays: 1Tam=5.54, 2Tam=5.47, Dido=5.39
+== Marlowe_A: 3 plays, seed 1
+Loading weights:   0%|          | 0/148 [00:00<?, ?it/s]Loading weights: 100%|██████████| 148/148 [00:00<00:00, 9225.24it/s]
+    epoch 1 loss 4.317
+    epoch 2 loss 3.951
+    epoch 3 loss 3.763
+   done in 198s; bits/token on own training plays: 1Tam=5.08, 2Tam=5.07, Dido=5.16
+== Marlowe_B: 4 plays, seed 1
+Loading weights:   0%|          | 0/148 [00:00<?, ?it/s]Loading weights: 100%|██████████| 148/148 [00:00<00:00, 18108.96it/s]
+    epoch 1 loss 4.167
+    epoch 2 loss 3.840
+    epoch 3 loss 3.666
+   done in 198s; bits/token on own training plays: DrFaust=4.85, JoM=5.22, Ed2=5.20
+== ShLater_s1: 11 plays, seed 1
+Loading weights:   0%|          | 0/148 [00:00<?, ?it/s]Loading weights: 100%|██████████| 148/148 [00:00<00:00, 9403.56it/s]
+    epoch 1 loss 4.333
+    epoch 2 loss 4.038
+    epoch 3 loss 3.884
+   done in 212s; bits/token on own training plays: R2=5.76, MND=5.62, Rom=5.59
+== ShLater_s2: 11 plays, seed 2
+Loading weights:   0%|          | 0/148 [00:00<?, ?it/s]Loading weights: 100%|██████████| 148/148 [00:00<00:00, 11415.17it/s]
+    epoch 1 loss 4.324
+    epoch 2 loss 4.040
+    epoch 3 loss 3.886
+   done in 208s; bits/token on own training plays: R2=5.76, MND=5.63, Rom=5.60
+== ShLater_A: 5 plays, seed 1
+Loading weights:   0%|          | 0/148 [00:00<?, ?it/s]Loading weights: 100%|██████████| 148/148 [00:00<00:00, 8764.54it/s]
+    epoch 1 loss 4.273
+    epoch 2 loss 3.967
+    epoch 3 loss 3.804
+   done in 234s; bits/token on own training plays: R2=5.54, MND=5.41, Rom=5.40
+== ShLater_B: 6 plays, seed 1
+Loading weights:   0%|          | 0/148 [00:00<?, ?it/s]Loading weights: 100%|██████████| 148/148 [00:00<00:00, 8555.44it/s]
+    epoch 1 loss 4.298
+    epoch 2 loss 3.991
+    epoch 3 loss 3.843
+   done in 1713s; bits/token on own training plays: JC=5.14, Ham=5.69, Mac=5.65
+== ShEarlyNonH6: 4 plays, seed 1
+Loading weights:   0%|          | 0/148 [00:00<?, ?it/s]Loading weights: 100%|██████████| 148/148 [00:00<00:00, 8878.23it/s]
+    epoch 1 loss 4.114
+    epoch 2 loss 3.785
+    epoch 3 loss 3.625
+   done in 741s; bits/token on own training plays: Tit=5.19, Shr=5.02, TGV=4.90
+== Greene: 4 plays, seed 1
+Loading weights:   0%|          | 0/148 [00:00<?, ?it/s]Loading weights: 100%|██████████| 148/148 [00:00<00:00, 3259.76it/s]
+    epoch 1 loss 4.546
+    epoch 2 loss 4.193
+    epoch 3 loss 4.007
+   done in 1446s; bits/token on own training plays: Alphonsus=5.13, Orlando=5.48, FriarBacon=5.64
+== Peele: 4 plays, seed 1
+Loading weights:   0%|          | 0/148 [00:00<?, ?it/s]Loading weights: 100%|██████████| 148/148 [00:00<00:00, 9017.26it/s]
+    epoch 1 loss 4.399
+    epoch 2 loss 4.056
+    epoch 3 loss 3.887
+   done in 1109s; bits/token on own training plays: OWT=5.20, Alcazar=5.24, EdwardI=5.88
+== AnonHeroic: 8 plays, seed 1
+Loading weights:   0%|          | 0/148 [00:00<?, ?it/s]Loading weights: 100%|██████████| 148/148 [00:00<00:00, 9329.36it/s]
+    epoch 1 loss 4.391
+    epoch 2 loss 4.084
+    epoch 3 loss 3.923
+   done in 688s; bits/token on own training plays: Soliman=5.53, Locrine=5.69, Selimus=5.58
+== Fletcher: 3 plays, seed 1
+Loading weights:   0%|          | 0/148 [00:00<?, ?it/s]Loading weights: 100%|██████████| 148/148 [00:00<00:00, 8353.50it/s]
+    epoch 1 loss 4.366
+    epoch 2 loss 4.063
+    epoch 3 loss 3.912
+   done in 2123s; bits/token on own training plays: FS=5.58, Prize=5.38, IP=5.34
+done

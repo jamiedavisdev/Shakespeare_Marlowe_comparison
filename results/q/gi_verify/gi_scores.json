@@ -1,0 +1,303 @@
+{
+ "2H6": {
+  "Marlowe": 0.32,
+  "Shakespeare": 0.35,
+  "Greene": 0.065,
+  "Peele": 0.05,
+  "Anon-heroic": 0.61
+ },
+ "3H6": {
+  "Marlowe": 0.29,
+  "Shakespeare": 0.275,
+  "Greene": 0.045,
+  "Peele": 0.04,
+  "Anon-heroic": 0.585
+ },
+ "Tit": {
+  "Marlowe": 0.095,
+  "Shakespeare": 0.855,
+  "Greene": 0.015,
+  "Peele": 0.29,
+  "Anon-heroic": 0.195
+ },
+ "R3": {
+  "Marlowe": 0.035,
+  "Shakespeare": 0.97,
+  "Greene": 0.08,
+  "Peele": 0.0,
+  "Anon-heroic": 0.14
+ },
+ "R2": {
+  "Marlowe": 0.05,
+  "Shakespeare": 0.93,
+  "Greene": 0.005,
+  "Peele": 0.195,
+  "Anon-heroic": 0.27
+ },
+ "Rom": {
+  "Marlowe": 0.27,
+  "Shakespeare": 0.905,
+  "Greene": 0.045,
+  "Peele": 0.06,
+  "Anon-heroic": 0.23
+ },
+ "1H4": {
+  "Marlowe": 0.015,
+  "Shakespeare": 1.0,
+  "Greene": 0.015,
+  "Peele": 0.035,
+  "Anon-heroic": 0.06
+ },
+ "LLL": {
+  "Marlowe": 0.0,
+  "Shakespeare": 1.0,
+  "Greene": 0.025,
+  "Peele": 0.0,
+  "Anon-heroic": 0.01
+ },
+ "MND": {
+  "Marlowe": 0.01,
+  "Shakespeare": 0.94,
+  "Greene": 0.03,
+  "Peele": 0.16,
+  "Anon-heroic": 0.12
+ },
+ "MV": {
+  "Marlowe": 0.01,
+  "Shakespeare": 1.0,
+  "Greene": 0.04,
+  "Peele": 0.005,
+  "Anon-heroic": 0.005
+ },
+ "Ado": {
+  "Marlowe": 0.0,
+  "Shakespeare": 1.0,
+  "Greene": 0.0,
+  "Peele": 0.03,
+  "Anon-heroic": 0.01
+ },
+ "2H4": {
+  "Marlowe": 0.005,
+  "Shakespeare": 0.995,
+  "Greene": 0.0,
+  "Peele": 0.04,
+  "Anon-heroic": 0.015
+ },
+ "Lr": {
+  "Marlowe": 0.01,
+  "Shakespeare": 1.0,
+  "Greene": 0.0,
+  "Peele": 0.06,
+  "Anon-heroic": 0.01
+ },
+ "Tro": {
+  "Marlowe": 0.025,
+  "Shakespeare": 1.0,
+  "Greene": 0.01,
+  "Peele": 0.095,
+  "Anon-heroic": 0.0
+ },
+ "1Tam": {
+  "Marlowe": 0.025,
+  "Shakespeare": 0.0,
+  "Greene": 0.075,
+  "Peele": 0.985,
+  "Anon-heroic": 0.4
+ },
+ "2Tam": {
+  "Marlowe": 0.145,
+  "Shakespeare": 0.0,
+  "Greene": 0.09,
+  "Peele": 0.99,
+  "Anon-heroic": 0.22
+ },
+ "Dido": {
+  "Marlowe": 0.325,
+  "Shakespeare": 0.015,
+  "Greene": 0.63,
+  "Peele": 0.41,
+  "Anon-heroic": 0.385
+ },
+ "DrFaust": {
+  "Marlowe": 0.72,
+  "Shakespeare": 0.485,
+  "Greene": 0.175,
+  "Peele": 0.19,
+  "Anon-heroic": 0.275
+ },
+ "JoM": {
+  "Marlowe": 0.515,
+  "Shakespeare": 0.11,
+  "Greene": 0.0,
+  "Peele": 0.065,
+  "Anon-heroic": 0.8
+ },
+ "Ed2": {
+  "Marlowe": 0.86,
+  "Shakespeare": 0.3,
+  "Greene": 0.01,
+  "Peele": 0.01,
+  "Anon-heroic": 0.55
+ },
+ "MP": {
+  "Marlowe": 0.83,
+  "Shakespeare": 0.025,
+  "Greene": 0.145,
+  "Peele": 0.525,
+  "Anon-heroic": 0.4
+ },
+ "ST": {
+  "Marlowe": 0.72,
+  "Shakespeare": 0.585,
+  "Greene": 0.15,
+  "Peele": 0.04,
+  "Anon-heroic": 0.425
+ },
+ "OWT": {
+  "Marlowe": 0.2,
+  "Shakespeare": 0.69,
+  "Greene": 0.01,
+  "Peele": 0.04,
+  "Anon-heroic": 0.695
+ },
+ "Gal": {
+  "Marlowe": 0.315,
+  "Shakespeare": 0.555,
+  "Greene": 0.075,
+  "Peele": 0.035,
+  "Anon-heroic": 0.145
+ },
+ "AShrew": {
+  "Marlowe": 0.32,
+  "Shakespeare": 0.5,
+  "Greene": 0.005,
+  "Peele": 0.215,
+  "Anon-heroic": 0.46
+ },
+ "TCKL": {
+  "Marlowe": 0.045,
+  "Shakespeare": 0.635,
+  "Greene": 0.475,
+  "Peele": 0.0,
+  "Anon-heroic": 0.085
+ },
+ "Alphonsus": {
+  "Marlowe": 0.14,
+  "Shakespeare": 0.08,
+  "Greene": 0.25,
+  "Peele": 0.035,
+  "Anon-heroic": 0.7
+ },
+ "Orlando": {
+  "Marlowe": 0.605,
+  "Shakespeare": 0.02,
+  "Greene": 0.72,
+  "Peele": 0.36,
+  "Anon-heroic": 0.37
+ },
+ "FriarBacon": {
+  "Marlowe": 0.245,
+  "Shakespeare": 0.05,
+  "Greene": 0.835,
+  "Peele": 0.735,
+  "Anon-heroic": 0.24
+ },
+ "JamesIV": {
+  "Marlowe": 0.07,
+  "Shakespeare": 0.56,
+  "Greene": 0.27,
+  "Peele": 0.09,
+  "Anon-heroic": 0.25
+ },
+ "Alcazar": {
+  "Marlowe": 0.745,
+  "Shakespeare": 0.0,
+  "Greene": 0.065,
+  "Peele": 0.905,
+  "Anon-heroic": 0.18
+ },
+ "EdwardI": {
+  "Marlowe": 0.265,
+  "Shakespeare": 0.055,
+  "Greene": 0.43,
+  "Peele": 0.59,
+  "Anon-heroic": 0.41
+ },
+ "David": {
+  "Marlowe": 0.685,
+  "Shakespeare": 0.0,
+  "Greene": 0.035,
+  "Peele": 0.965,
+  "Anon-heroic": 0.17
+ },
+ "Wounds": {
+  "Marlowe": 0.575,
+  "Shakespeare": 0.02,
+  "Greene": 0.24,
+  "Peele": 0.86,
+  "Anon-heroic": 0.09
+ },
+ "Soliman": {
+  "Marlowe": 0.375,
+  "Shakespeare": 0.39,
+  "Greene": 0.055,
+  "Peele": 0.115,
+  "Anon-heroic": 0.865
+ },
+ "Locrine": {
+  "Marlowe": 0.64,
+  "Shakespeare": 0.015,
+  "Greene": 0.215,
+  "Peele": 0.915,
+  "Anon-heroic": 0.04
+ },
+ "Selimus": {
+  "Marlowe": 0.49,
+  "Shakespeare": 0.495,
+  "Greene": 0.455,
+  "Peele": 0.25,
+  "Anon-heroic": 0.39
+ },
+ "TRKJ": {
+  "Marlowe": 0.175,
+  "Shakespeare": 0.21,
+  "Greene": 0.23,
+  "Peele": 0.96,
+  "Anon-heroic": 0.205
+ },
+ "JackStraw": {
+  "Marlowe": 0.865,
+  "Shakespeare": 0.075,
+  "Greene": 0.175,
+  "Peele": 0.285,
+  "Anon-heroic": 0.315
+ },
+ "EdwardIII": {
+  "Marlowe": 0.73,
+  "Shakespeare": 0.4,
+  "Greene": 0.225,
+  "Peele": 0.525,
+  "Anon-heroic": 0.23
+ },
+ "Arden": {
+  "Marlowe": 0.535,
+  "Shakespeare": 0.435,
+  "Greene": 0.0,
+  "Peele": 0.44,
+  "Anon-heroic": 0.44
+ },
+ "TTR3": {
+  "Marlowe": 0.86,
+  "Shakespeare": 0.11,
+  "Greene": 0.02,
+  "Peele": 0.005,
+  "Anon-heroic": 0.505
+ },
+ "Endymion": {
+  "Marlowe": 0.135,
+  "Shakespeare": 0.575,
+  "Greene": 0.025,
+  "Peele": 0.045,
+  "Anon-heroic": 0.08
+ }
+}

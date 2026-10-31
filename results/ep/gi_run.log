@@ -1,0 +1,10 @@
+/Users/jamiedavis/Projects/Shakespeare_Marlowe_comparison/scripts/gi_verify.py:80: RuntimeWarning: Mean of empty slice
+  out.append(f'| {g} | ' + ' | '.join(f"{np.nanmean([rows[w][C] for w in ids]):.2f}" for C in CANDS) + ' |')
+Traceback (most recent call last):
+  File "/Users/jamiedavis/Projects/Shakespeare_Marlowe_comparison/scripts/gi_verify.py", line 80, in <module>
+    out.append(f'| {g} | ' + ' | '.join(f"{np.nanmean([rows[w][C] for w in ids]):.2f}" for C in CANDS) + ' |')
+                             ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/jamiedavis/Projects/Shakespeare_Marlowe_comparison/scripts/gi_verify.py", line 80, in <genexpr>
+    out.append(f'| {g} | ' + ' | '.join(f"{np.nanmean([rows[w][C] for w in ids]):.2f}" for C in CANDS) + ' |')
+                                                       ~~~~^^^
+KeyError: 'ShoeHol'

@@ -1,0 +1,50 @@
+=== func
+distances...
+loo attribution...
+source check...
+marlowe scan...
+pairwise tests...
+QUESTION  Marlowe vs Shakespeare early: words acc=0.68 auc=0.76 | chars acc=nan auc=nan
+QUESTION  Marlowe vs Shakespeare early, Henry VI excluded: words acc=0.86 auc=0.94 | chars acc=nan auc=nan
+QUESTION  Marlowe vs Shakespeare early, histories/Titus only (genre-matched): words acc=0.38 auc=0.30 | chars acc=nan auc=nan
+QUESTION  Marlowe vs Shakespeare later: words acc=0.93 auc=0.98 | chars acc=nan auc=nan
+QUESTION  Marlowe vs all Shakespeare: words acc=0.86 auc=0.92 | chars acc=nan auc=nan
+SAME-AUTHOR  Shakespeare early vs Shakespeare later: words acc=0.73 auc=0.81 | chars acc=nan auc=nan
+SAME-AUTHOR  Shakespeare early histories/Titus vs early R3+comedies: words acc=0.71 auc=0.82 | chars acc=nan auc=nan
+SAME-AUTHOR  Shakespeare 1595-97 vs 1599-1611: words acc=0.67 auc=0.76 | chars acc=nan auc=nan
+SAME-AUTHOR  Marlowe 1587-89 vs Marlowe 1589-93: words acc=0.55 auc=0.60 | chars acc=nan auc=nan
+DIFFERENT  Marlowe vs Greene (same register, same years): words acc=0.57 auc=0.60 | chars acc=nan auc=nan
+DIFFERENT  Marlowe vs Peele (same register, same years): words acc=0.57 auc=0.61 | chars acc=nan auc=nan
+DIFFERENT  Marlowe vs anonymous heroic/history 1587-94: words acc=0.63 auc=0.65 | chars acc=nan auc=nan
+DIFFERENT  Shakespeare early vs Greene: words acc=0.64 auc=0.61 | chars acc=nan auc=nan
+DIFFERENT  Shakespeare early vs Peele: words acc=0.72 auc=0.74 | chars acc=nan auc=nan
+DIFFERENT  Shakespeare early vs anonymous heroic/history 1587-94: words acc=0.58 auc=0.63 | chars acc=nan auc=nan
+DIFFERENT  Greene vs Peele: words acc=0.60 auc=0.71 | chars acc=nan auc=nan
+DIFFERENT  Henry VI 1-3 + Titus vs Greene: words acc=0.42 auc=0.42 | chars acc=nan auc=nan
+QUESTION  Henry VI 1-3 + Titus vs Marlowe (repeat, for comparison): words acc=0.38 auc=0.30 | chars acc=nan auc=nan
+done
+=== mfw150
+distances...
+loo attribution...
+source check...
+marlowe scan...
+pairwise tests...
+QUESTION  Marlowe vs Shakespeare early: words acc=0.63 auc=0.63 | chars acc=0.59 auc=0.57
+QUESTION  Marlowe vs Shakespeare early, Henry VI excluded: words acc=0.84 auc=0.87 | chars acc=0.74 auc=0.82
+QUESTION  Marlowe vs Shakespeare early, histories/Titus only (genre-matched): words acc=0.41 auc=0.34 | chars acc=0.34 auc=0.13
+QUESTION  Marlowe vs Shakespeare later: words acc=0.89 auc=0.95 | chars acc=0.92 auc=0.97
+QUESTION  Marlowe vs all Shakespeare: words acc=0.79 auc=0.79 | chars acc=0.85 auc=0.84
+SAME-AUTHOR  Shakespeare early vs Shakespeare later: words acc=0.69 auc=0.75 | chars acc=0.69 auc=0.75
+SAME-AUTHOR  Shakespeare early histories/Titus vs early R3+comedies: words acc=0.75 auc=0.82 | chars acc=0.67 auc=0.76
+SAME-AUTHOR  Shakespeare 1595-97 vs 1599-1611: words acc=0.72 auc=0.79 | chars acc=0.77 auc=0.82
+SAME-AUTHOR  Marlowe 1587-89 vs Marlowe 1589-93: words acc=0.58 auc=0.68 | chars acc=0.53 auc=0.57
+DIFFERENT  Marlowe vs Greene (same register, same years): words acc=0.69 auc=0.78 | chars acc=0.75 auc=0.76
+DIFFERENT  Marlowe vs Peele (same register, same years): words acc=0.63 auc=0.70 | chars acc=0.62 auc=0.51
+DIFFERENT  Marlowe vs anonymous heroic/history 1587-94: words acc=0.57 auc=0.57 | chars acc=0.46 auc=0.42
+DIFFERENT  Shakespeare early vs Greene: words acc=0.70 auc=0.60 | chars acc=0.71 auc=0.72
+DIFFERENT  Shakespeare early vs Peele: words acc=0.78 auc=0.81 | chars acc=0.68 auc=0.65
+DIFFERENT  Shakespeare early vs anonymous heroic/history 1587-94: words acc=0.50 auc=0.57 | chars acc=0.48 auc=0.50
+DIFFERENT  Greene vs Peele: words acc=0.67 auc=0.78 | chars acc=0.65 auc=0.71
+DIFFERENT  Henry VI 1-3 + Titus vs Greene: words acc=0.56 auc=0.61 | chars acc=0.42 auc=0.44
+QUESTION  Henry VI 1-3 + Titus vs Marlowe (repeat, for comparison): words acc=0.41 auc=0.34 | chars acc=0.35 auc=0.13
+done
