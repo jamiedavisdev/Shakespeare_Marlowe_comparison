@@ -427,3 +427,46 @@ now visible word by word.
 register, and it does not. Word-adjacency networks are the remaining published candidate. The per-word
 tables are probably the most useful thing on the site for a non-specialist reader, because they turn
 "Marlowe-like" into a list of words one can check against a page of text.
+
+## Session 4 (2026-10-31): relative embedding geometry
+
+**Idea (Jamie):** the weight comparison looked at the whole parameter delta, and it excluded the token
+embeddings. What about the embeddings, and specifically the *relative* positions of words: even if two
+models put a word in different places, is the vector between two words the same, and is that meaningful?
+
+**My assessment before running it.** Distances between words are scalars and survive any rotation of
+the space, so they are the right thing to compare across models; difference vectors are not, unless the
+spaces share coordinates (ours do, by shared initialisation, so both can be reported). Expectations
+written down before the run: (1) the raw pairwise distances will be near-identical across all thirteen
+models, because 78,818 tokens cannot move a pretrained geometry, so the test has to use the *change* in
+distance; (2) the words that move are the frequent ones, so this risks being a noisier function-word
+test; (3) register will dominate again. Acceptance bar unchanged: same-author pairs must sit above
+different-author same-register pairs.
+
+**Step 15: implementation.** `finetune.py` part (C), run with `EMB_ONLY=1` so the perplexity and
+task-vector files from 30 October are not overwritten by a re-run with slightly different numbers. Word
+list fixed before training: 400 whole-word, lower-case GPT-2 tokens with at least three uses in every
+model's training text, ranked by the smallest count across sets (*the, and, to, of, my, a, in, that, be,
+with ... mad, beauty, horse, lies*). Names and sentence-initial forms are excluded by the lower-case
+rule. Per model pair, three numbers: correlation of the raw pairwise-cosine matrices; correlation of the
+change in pairwise cosine from pretrained (the relative test, coordinate-free); cosine of the embedding
+deltas over those rows (the embedding-layer twin of the task-vector cosine). Same thirteen models, seeds
+and budget. Raw rows saved to `embeddings.npz` so the analysis can be redone without retraining. About 40
+minutes per corpus.
+
+**Result, Folger/EMED corpus.** Raw geometry: 0.9999 for every pair, mean absolute change in a pair's
+cosine 0.0005 (expectation 1 confirmed). Change in geometry: seed-only 0.94 / 0.93; same author, other
+plays 0.46 (Marlowe) / 0.40 (Shakespeare later); same author, other period 0.39; Marlowe vs Greene /
+Peele / anonymous heroic 0.43 / 0.45 / 0.46; Greene vs Peele 0.38; the question 0.41; Marlowe vs
+Fletcher 0.31. Embedding-delta cosine gives the same ordering at lower values (seed 0.90, everything
+else 0.23 to 0.34).
+
+**Thought.** Two things I did not expect. The seed ceiling is 0.93, far above the 0.78 of the full weight
+delta, so the embedding geometry is a much less noisy measurement than the task vector; expectation (2)
+was too pessimistic about noise. And yet the author gap is still absent: Marlowe against his own other
+plays equals Marlowe against the anonymous heroic plays, and the ordering of every pair is the register
+and period ordering (inside the 1587-92 register mid 0.40s, across periods 0.31-0.39, Fletcher the
+floor). A cleaner instrument that finds nothing is stronger evidence than a noisy one. What the
+geometry records is which words co-occur in the training text, which is register and period. This is the
+coordinate-free version of the original idea, and it closes it on the same grounds as the weight delta.
+EP replication: see below.

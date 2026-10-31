@@ -32,7 +32,10 @@ and a second corpus in which every text comes from one editorial pipeline.
    Nashe/Shakespeare division did not survive the verse-only control.
 4. **Comparing fine-tuned model weights, the original idea, does not work, and the controls show why.**
    A model's weight delta is 0.75-0.78 similar to itself under another random seed and 0.21-0.28
-   similar to every other model, with same-author pairs no closer than different-author pairs.
+   similar to every other model, with same-author pairs no closer than different-author pairs. The
+   relative geometry of the word embeddings (added 31 October) gives the same answer with far less seed
+   noise: seed-only pairs 0.93, same-author pairs 0.40-0.46, different-author same-register pairs
+   0.43-0.46, the question 0.41.
 5. **Word-level tests (added 31 October) agree, and Burrows's Zeta fails the acceptance test.** Zeta marker
    words separate Marlowe from non-Henry VI early Shakespeare (accuracy 0.79-0.85), but they also separate
    Shakespeare's 1595-97 plays from his 1599-1611 plays (0.72-0.74), and they cannot separate Greene from
@@ -244,6 +247,32 @@ in the same register (0.27). The weights record which text the model saw and whi
 they carry no detectable author signal at this scale. The Marlowe-Shakespeare pair sits with the
 cross-register pairs. This is the measured answer to the original proposal: comparing weights cannot
 answer the question, and the control pairs show why.
+
+**Comparing the relative geometry of the embeddings.** A second form of the idea: ignore where each
+word's vector sits and ask whether the *distances between words* change in the same way under two
+fine-tunes. For 400 whole-word tokens present in every training set (the function words and the
+commonest content words), the pairwise cosine between every two words is computed from each model's
+token embeddings, and models are compared by the correlation of the *change* in those cosines from the
+pretrained model (`results/finetune/embeddings.md`). The change has to be used because the raw
+geometry barely moves: every model's pairwise-cosine matrix correlates with every other at 0.9999, and
+the mean change in any pair's cosine is 0.0005.
+
+| pair | type | change in geometry | embedding delta |
+|---|---|---|---|
+| same text, two seeds (Marlowe; Shakespeare-later) | seed noise | 0.94; 0.93 | 0.90; 0.89 |
+| same author, different plays (Marlowe A/B; Shakespeare-later A/B) | same author | 0.46; 0.40 | 0.33; 0.30 |
+| Shakespeare early vs later | same author, different period | 0.39 | 0.30 |
+| Marlowe vs Greene; vs Peele; vs anonymous heroic | different author, same register | 0.43; 0.45; 0.46 | 0.32; 0.32; 0.34 |
+| Greene vs Peele | different author, same register | 0.38 | 0.29 |
+| **Marlowe vs Shakespeare early (non-Henry VI)** | the question | **0.41** | **0.29** |
+| Marlowe vs Fletcher; Shakespeare later vs Fletcher | different author and period | 0.31; 0.31 | 0.23; 0.24 |
+
+The measurement is much cleaner than the full weight delta (seed-only pairs agree at 0.93 rather than
+0.78), and it still shows no author gap: Marlowe against his own other plays (0.46) equals Marlowe
+against the anonymous heroic plays (0.46), and the question pair sits in the middle of the
+same-register pairs. What the geometry records is which words co-occur in the training text, and that
+is register and period. (Folger/EMED corpus; the all-EarlyPrint replication is in
+`results/ep/finetune/embeddings.md`.)
 
 **Comparing behaviour.** Held-out bits per token, all-EarlyPrint corpus (`results/ep/finetune/perplexity.md`),
 so no edition offset: Marlowe's plays are predicted best by a Peele, Greene or anonymous-heroic model in

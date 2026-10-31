@@ -21,7 +21,7 @@ scripts/scene_scan.py     four-way (Marlowe/Shakespeare/Peele/Greene) scene-leve
 scripts/prose_verse.py    verse-only / prose-only rescoring of the Henry VI scenes
 scripts/edition_effect.py how much an edition change moves cross-entropy under fixed models
 scripts/quarto_check.py   Folio vs 1590s-quarto text of Titus and Richard III under the author models
-scripts/finetune.py       GPT-2 fine-tune per author: held-out bits/token and weight-delta cosines
+scripts/finetune.py       GPT-2 fine-tune per author: held-out bits/token, weight-delta cosines, embedding geometry
 REPORT.md                 findings and caveats (v1 archived in results/)
 NOTEBOOK.md               dated lab notebook: process, thoughts, bugs, results
 ```
@@ -59,8 +59,20 @@ for f in func mfw150 mfw500; do .venv/bin/python scripts/stylometry.py $f; done
 .venv/bin/python scripts/scene_scan.py && .venv/bin/python scripts/prose_verse.py
 CORPUS=ep .venv/bin/python scripts/build_corpus.py && CORPUS=ep .venv/bin/python scripts/stylometry.py func   # etc.
 .venv/bin/pip install torch transformers && .venv/bin/python scripts/finetune.py   # ~1 h on an M3 Pro
+EMB_ONLY=1 .venv/bin/python scripts/finetune.py   # embedding geometry only (results/finetune/embeddings.md), ~40 min
 ```
 
 EarlyPrint raw files: `https://bitbucket.org/eads004/<first 3 chars of TCP id>/raw/master/<TCP id>.xml`.
 
 Raw downloads (data/raw) are re-fetched with the curl commands recorded in REPORT.md if missing.
+
+## Word-level tests (added 2026-10-31)
+
+```
+.venv/bin/python scripts/word_profiles.py            # results/words/{word_profiles,zeta}.{md,json}
+CORPUS=ep .venv/bin/python scripts/word_profiles.py  # results/ep/words/
+```
+
+Per-word rate comparisons (Cohen's d over plays) for every benchmark pair, and Burrows's Zeta
+marker-word tests with leave-one-play-out scoring and a Marlowe-vs-Shakespeare projection of the
+Henry VI plays and the register controls. Runs in a couple of seconds.

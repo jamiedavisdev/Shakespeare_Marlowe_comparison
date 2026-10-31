@@ -105,12 +105,12 @@ details p{font-size:17px}
 .flow .step{background:var(--paper-2);padding:12px 14px;font-family:var(--ui);font-size:14px;line-height:1.4;min-width:0}
 .flow .step b{display:block;font-size:15px;margin-bottom:4px}
 .kbd{font-family:var(--ui);font-size:13px;background:var(--paper-3);padding:1px 6px;border-radius:4px}
-/* section bar: sits under the hero and sticks to the top of the viewport while the page scrolls.
+/* section bar: first thing on the page, above the hero, and sticks to the top of the viewport while the page scrolls.
    Full-bleed (undoes the body gutter), one row that scrolls sideways on narrow screens, current section underlined. */
 .toc{position:sticky;top:env(safe-area-inset-top,0px);z-index:25;overflow-x:auto;scrollbar-width:none;
   margin-inline:calc(-1 * max(16px,env(safe-area-inset-left,0px))) calc(-1 * max(16px,env(safe-area-inset-right,0px)));
   background:color-mix(in oklab,var(--paper) 94%,transparent);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
-  border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);font-family:var(--ui);font-size:14px}
+  border-bottom:1px solid var(--rule);font-family:var(--ui);font-size:14px}
 .toc::-webkit-scrollbar{display:none}
 .toc .in{display:flex;gap:0 18px;width:max-content;margin:0 auto;padding:0 max(16px,env(safe-area-inset-left,0px)) 0 max(16px,env(safe-area-inset-left,0px))}
 .toc a{flex:0 0 auto;color:var(--ink-2);text-decoration:none;white-space:nowrap;padding:11px 0 8px;border-bottom:2px solid transparent;margin-bottom:-1px}
@@ -182,6 +182,10 @@ section{scroll-margin-top:56px}
 </head>
 <body>
 
+<nav class="toc" aria-label="Sections"><div class="in">
+  <a href="#question">The question</a><a href="#idea">The original idea</a><a href="#method">How we tested</a><a href="#map">Map of the plays</a><a href="#verify">Verification</a><a href="#classify">Classifiers</a><a href="#words">Words</a><a href="#chars">Character models</a><a href="#scenes">Scene by scene</a><a href="#neural">Neural models</a><a href="#honest">What went wrong</a><a href="#texts">Texts and data</a><a href="#glossary">Glossary</a>
+</div></nav>
+
 <header class="hero">
   <div class="col">
     <div class="eyebrow">A computational test · 56 plays · six methods · three corpora</div>
@@ -195,10 +199,6 @@ section{scroll-margin-top:56px}
     <p class="small">Short answer: the measurements do not support one author. Marlowe's style does live on in one place, the <i>Henry VI</i> plays, but there it is shared by half a dozen other writers of 1587 to 1592. Scroll for the ideas, the methods, and every result, with controls you can play with.</p>
   </div>
 </header>
-
-<nav class="toc" aria-label="Sections"><div class="in">
-  <a href="#question">The question</a><a href="#idea">The original idea</a><a href="#method">How we tested</a><a href="#map">Map of the plays</a><a href="#verify">Verification</a><a href="#classify">Classifiers</a><a href="#words">Words</a><a href="#chars">Character models</a><a href="#scenes">Scene by scene</a><a href="#neural">Neural models</a><a href="#honest">What went wrong</a><a href="#texts">Texts and data</a><a href="#glossary">Glossary</a>
-</div></nav>
 
 <section id="question">
   <div class="col">
@@ -228,18 +228,20 @@ section{scroll-margin-top:56px}
       <div class="step"><b>3 · Measure the change</b>Subtract the original weights from each. That difference is what the model learned.</div>
       <div class="step"><b>4 · Compare with controls</b>Cosine similarity between the differences, including same-text/new-seed and same-author/other-plays pairs.</div>
     </div>
+    <p>There is a second form of the idea, which the chart below can also show. Ignore where each word's vector ends up and ask whether the <em>distances between words</em> change in the same way under two fine-tunes. That is coordinate-free, so it would work even for models that never shared a starting point. For 400 common words present in every training set we measured the cosine between every pair of words in each model's embeddings, and compared models by how their changes from the pretrained geometry correlate. (The raw distances cannot be used: at this budget every model's geometry is 0.9999 correlated with every other's.)</p>
   </div>
   <div class="wide plate" data-sec="idea">
-    <p class="ttl">How similar are the weight changes?</p>
-    <p class="sub">Cosine similarity between fine-tuning deltas. Hover a cell. Rows and columns are the thirteen models.</p>
+    <p class="ttl">How similar are the fine-tunes?</p>
+    <p class="sub">Weight deltas: cosine similarity between (fine-tuned − pretrained) over all non-embedding parameters. Embedding geometry: correlation of the change in pairwise cosine between 400 shared words. Hover a cell. Rows and columns are the thirteen models.</p>
     <div class="controls">
+      <span class="seg" role="group" aria-label="Measure"><button id="tv-w" aria-pressed="true">Weight deltas</button><button id="tv-g" aria-pressed="false">Embedding geometry</button></span>
       <span class="seg" role="group" aria-label="Corpus"><button id="tv-main" aria-pressed="true">Folger / EMED corpus</button><button id="tv-ep" aria-pressed="false">All-EarlyPrint corpus</button></span>
     </div>
     <div class="cmp">
       <div id="tv-heat" style="min-width:0"></div>
       <div id="tv-pairs" style="min-width:0"></div>
     </div>
-    <p class="cap">Read it like this. The same text trained with a different random seed gives 0.75 to 0.78. Everything else, same author or not, same register or not, sits at 0.19 to 0.30. Two Marlowe models trained on different halves of his canon (0.27) are no closer than Marlowe and Greene (0.27). The weights record which text the model saw. They do not record who wrote it. The Marlowe versus early Shakespeare pair (0.23) lands with the different-register pairs.</p>
+    <p class="cap">Read it like this. The same text trained with a different random seed gives 0.75 to 0.78. Everything else, same author or not, same register or not, sits at 0.19 to 0.30. Two Marlowe models trained on different halves of his canon (0.27) are no closer than Marlowe and Greene (0.27). The weights record which text the model saw. They do not record who wrote it. The Marlowe versus early Shakespeare pair (0.23) lands with the different-register pairs. The embedding geometry is a much cleaner measurement, with seed-only pairs at 0.93 instead of 0.78, and it says the same thing: Marlowe against his own other plays (0.46) equals Marlowe against the anonymous heroic plays (0.46), and the question pair (0.41) sits among the same-register pairs.</p>
   </div>
   <div class="col">
     <p class="note">So the original idea gives a clear answer, just not to the question it was meant for. It tells us that at this scale weight comparison carries no author signal. We then turned to methods that have a track record, and we kept the same discipline: every result has to be read against a same-author benchmark and a different-author benchmark.</p>
@@ -516,10 +518,10 @@ section{scroll-margin-top:56px}
 const $=s=>document.querySelector(s);
 /* section bar: underline the section nearest the top, and keep that link in view when the bar scrolls sideways */
 (function(){const bar=$('.toc');if(!bar)return;const links=[...bar.querySelectorAll('a[href^="#"]')];const secs=links.map(a=>document.getElementById(a.getAttribute('href').slice(1))).filter(Boolean);let prev=null;
-  function spy(){const line=bar.getBoundingClientRect().bottom+12;let cur=secs[0];for(const sc of secs){if(sc.getBoundingClientRect().top<=line)cur=sc;else break}
+  function spy(){const line=bar.getBoundingClientRect().bottom+12;let cur=null;for(const sc of secs){if(sc.getBoundingClientRect().top<=line)cur=sc;else break}
     if(innerHeight+scrollY>=document.documentElement.scrollHeight-2)cur=secs[secs.length-1];
     if(cur===prev)return;prev=cur;let on=null;
-    links.forEach(a=>{const hit=a.getAttribute('href')==='#'+cur.id;a.classList.toggle('on',hit);if(hit){a.setAttribute('aria-current','true');on=a}else a.removeAttribute('aria-current')});
+    links.forEach(a=>{const hit=!!cur&&a.getAttribute('href')==='#'+cur.id;a.classList.toggle('on',hit);if(hit){a.setAttribute('aria-current','true');on=a}else a.removeAttribute('aria-current')});
     if(on){const r=on.getBoundingClientRect(),b=bar.getBoundingClientRect();if(r.left<b.left+8||r.right>b.right-8)bar.scrollTo({left:on.offsetLeft-(b.width-r.width)/2,behavior:'smooth'})}}
   addEventListener('scroll',spy,{passive:true});addEventListener('resize',spy);spy()})();
 const tip=$('#tip');
@@ -634,33 +636,38 @@ function legendHTML(cats){return cats.map(c=>`<span><i style="background:${COL[c
 })();
 
 /* ---------- Task vectors ---------- */
-function drawTV(which){
-  const T=which==='ep'?D.tv_ep:D.tv;const n=T.names.length;const W=520,cell=Math.floor((W-110)/n),H=110+cell*n;
+let tvCorpus='main',tvMeasure='w';
+function drawTV(){
+  const T=D[(tvMeasure==='g'?'emb':'tv')+(tvCorpus==='ep'?'_ep':'')];
+  if(!T){$('#tv-heat').innerHTML='<p class="pending">Not run on this corpus yet.</p>';$('#tv-pairs').innerHTML='';return}
+  const n=T.names.length;const W=520,cell=Math.floor((W-110)/n),H=110+cell*n;
   const s=svgRoot(W,H,$('#tv-heat'));
   const pretty=nm=>nm.replace('ShLater','Sh-later').replace('ShEarlyNonH6','Sh-early (no H6)').replace('AnonHeroic','Anon heroic').replace('_s','·seed').replace('_A','·A').replace('_B','·B');
   const color=v=>{const t=Math.max(0,Math.min(1,(v-0.15)/(0.85-0.15)));return `color-mix(in oklab, var(--paper-2), var(--sh) ${Math.round(t*100)}%)`};
   T.names.forEach((nm,i)=>{const t=el('text',{x:105,y:110+cell*i+cell/2+4,'text-anchor':'end','font-size':11},s);t.textContent=pretty(nm);
     const tt=el('text',{x:110+cell*i+cell/2,y:104,'text-anchor':'start','font-size':11,transform:`rotate(-60 ${110+cell*i+cell/2} 104)`},s);tt.textContent=pretty(nm)});
   for(let i=0;i<n;i++)for(let j=0;j<n;j++){const v=T.cosine[i][j];const r=el('rect',{x:110+cell*j+1,y:110+cell*i+1,width:cell-2,height:cell-2,fill:i===j?'var(--paper-3)':color(v),tabindex:0},s);
-    bind(r,`<b>${esc(pretty(T.names[i]))}</b> vs <b>${esc(pretty(T.names[j]))}</b><br>cosine ${i===j?'1 (itself)':fmt(v,3)}`)}
+    bind(r,`<b>${esc(pretty(T.names[i]))}</b> vs <b>${esc(pretty(T.names[j]))}</b><br>${tvMeasure==='g'?'correlation':'cosine'} ${i===j?'1 (itself)':fmt(v,3)}`)}
   // key pairs bars
   const pairs=[['Marlowe_s1','Marlowe_s2','same text, new seed','seed'],['ShLater_s1','ShLater_s2','same text, new seed','seed'],['Marlowe_A','Marlowe_B','same author, other plays','same'],['ShLater_A','ShLater_B','same author, other plays','same'],['ShEarlyNonH6','ShLater_s1','same author, other period','same'],['Marlowe_s1','Greene','different author, same register','diff'],['Marlowe_s1','Peele','different author, same register','diff'],['Marlowe_s1','AnonHeroic','different author, same register','diff'],['Greene','Peele','different author, same register','diff'],['Marlowe_s1','ShEarlyNonH6','THE QUESTION: Marlowe vs early Shakespeare','q'],['Marlowe_s1','ShLater_s1','Marlowe vs later Shakespeare','q'],['ShEarlyNonH6','Peele','different author and register','diff'],['Marlowe_s1','Fletcher','different author and register','diff']].filter(p=>T.names.includes(p[0])&&T.names.includes(p[1]));
   const idx=nm=>T.names.indexOf(nm);
   const rows=pairs.map(p=>({a:p[0],b:p[1],lab:p[2],type:p[3],v:T.cosine[idx(p[0])][idx(p[1])]}));
   const W2=520,rh=26,H2=40+rh*rows.length;const s2=svgRoot(W2,H2,$('#tv-pairs'));
   const x=v=>230+v*(W2-250);
-  el('text',{x:230,y:14,'font-size':12,'font-weight':700,fill:'var(--ink)'},s2).textContent='Cosine similarity of weight deltas';
+  el('text',{x:230,y:14,'font-size':12,'font-weight':700,fill:'var(--ink)'},s2).textContent=tvMeasure==='g'?'Correlation of the change in word-pair cosines':'Cosine similarity of weight deltas';
   [0,.25,.5,.75,1].forEach(v=>{el('line',{x1:x(v),x2:x(v),y1:24,y2:H2-16,class:'grid',stroke:'var(--paper-3)'},s2);el('text',{x:x(v),y:H2-2,'text-anchor':'middle','font-size':11},s2).textContent=v});
   const tcol={seed:'var(--ink-3)',same:'var(--sh)',diff:'var(--ink-3)',q:'var(--rubric)'};
   rows.forEach((r,i)=>{const y=30+rh*i;const t=el('text',{x:224,y:y+15,'text-anchor':'end','font-size':11,fill:r.type==='q'?'var(--rubric)':'var(--ink-2)','font-weight':r.type==='q'?700:400},s2);t.textContent=pretty(r.a)+' · '+pretty(r.b);
     const bar=el('rect',{x:x(0),y:y+4,width:x(r.v)-x(0),height:16,fill:tcol[r.type],rx:0,tabindex:0},s2);el('path',{d:`M${x(r.v)-4} ${y+4}h4a4 4 0 0 1 4 4v8a4 4 0 0 1-4 4h-4z`,fill:tcol[r.type]},s2);
     el('text',{x:x(r.v)+10,y:y+16,'font-size':11,fill:'var(--ink)'},s2).textContent=fmt(r.v,2);
-    bind(bar,`<b>${esc(r.lab)}</b><br>${esc(pretty(r.a))} vs ${esc(pretty(r.b))}<br>cosine ${fmt(r.v,3)}`)});
+    bind(bar,`<b>${esc(r.lab)}</b><br>${esc(pretty(r.a))} vs ${esc(pretty(r.b))}<br>${tvMeasure==='g'?'correlation':'cosine'} ${fmt(r.v,3)}`)});
   el('text',{x:230,y:H2-16,'font-size':10,fill:'var(--ink-3)'},s2).textContent='';
 }
-drawTV('main');
-$('#tv-main').onclick=()=>{drawTV('main');$('#tv-main').setAttribute('aria-pressed','true');$('#tv-ep').setAttribute('aria-pressed','false')};
-$('#tv-ep').onclick=()=>{drawTV('ep');$('#tv-ep').setAttribute('aria-pressed','true');$('#tv-main').setAttribute('aria-pressed','false')};
+drawTV();
+$('#tv-main').onclick=()=>{tvCorpus='main';drawTV();$('#tv-main').setAttribute('aria-pressed','true');$('#tv-ep').setAttribute('aria-pressed','false')};
+$('#tv-ep').onclick=()=>{tvCorpus='ep';drawTV();$('#tv-ep').setAttribute('aria-pressed','true');$('#tv-main').setAttribute('aria-pressed','false')};
+$('#tv-w').onclick=()=>{tvMeasure='w';drawTV();$('#tv-w').setAttribute('aria-pressed','true');$('#tv-g').setAttribute('aria-pressed','false')};
+$('#tv-g').onclick=()=>{tvMeasure='g';drawTV();$('#tv-g').setAttribute('aria-pressed','true');$('#tv-w').setAttribute('aria-pressed','false')};
 
 /* ---------- MDS map ---------- */
 (function(){

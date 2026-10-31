@@ -67,6 +67,10 @@ tv=json.load(open(P+'results/finetune/taskvectors.json'))
 out['tv']=dict(names=tv['names'],cosine=[[round(x,3) for x in row] for row in tv['cosine']])
 tve=json.load(open(P+'results/ep/finetune/taskvectors.json'))
 out['tv_ep']=dict(names=tve['names'],cosine=[[round(x,3) for x in row] for row in tve['cosine']])
+# embedding geometry (correlation of the change in pairwise word-embedding cosine), same model grid
+for key,rel in (('emb','results/finetune/embeddings.json'),('emb_ep','results/ep/finetune/embeddings.json')):
+    if os.path.exists(P+rel):
+        e=json.load(open(P+rel)); out[key]=dict(names=e['names'],cosine=[[round(x,3) for x in row] for row in e['corr_delta_cos']],words=len(e['words']))
 # perplexity ep
 pp=json.load(open(P+'results/ep/finetune/perplexity.json'))
 out['ppl_ep']=pp
@@ -147,6 +151,8 @@ TABLES=[('results/gi_verify/gi_verify.md','Impostors verification, all plays (Fo
  ('results/scene_scan/prose_verse.md','Verse-only and prose-only rescoring of Henry VI','scenes'),
  ('results/finetune/taskvectors.md','GPT-2 weight-delta cosines (Folger/EMED)','idea'),
  ('results/ep/finetune/taskvectors.md','GPT-2 weight-delta cosines (all-EarlyPrint)','idea'),
+ ('results/finetune/embeddings.md','GPT-2 relative embedding geometry (Folger/EMED)','idea'),
+ ('results/ep/finetune/embeddings.md','GPT-2 relative embedding geometry (all-EarlyPrint)','idea'),
  ('results/ep/finetune/perplexity.md','GPT-2 held-out bits per token (all-EarlyPrint)','neural'),
  ('results/finetune/perplexity.md','GPT-2 held-out bits per token (Folger/EMED)','neural'),
  ('REPORT.md','Full report, version 2','doc'),('NOTEBOOK.md','Lab notebook: every step, bug and change of mind','doc'),('README.md','How to rerun everything','doc'),
