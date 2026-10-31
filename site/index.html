@@ -1,0 +1,662 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Marlowe or Shakespeare?</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="An interactive walk through a computational test of whether Christopher Marlowe wrote Shakespeare's early plays.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Alegreya:ital,wght@0,400;0,500;0,700;1,400&family=Alegreya+Sans:wght@400;500;700&display=swap">
+<style>
+/* Layout: a long-form reading page in one 72ch column, with full-bleed "plates" (charts) that break out to ~1100px.
+   The look borrows from the early printed quarto: ink on paper, a rubric red for emphasis, running heads in small caps. */
+:root{
+  --paper:#f3f2ee; --paper-2:#e9e8e2; --paper-3:#dddcd4;
+  --ink:#1a1b1e; --ink-2:#4b4c50; --ink-3:#7d7e84;
+  --rule:#cfcec6; --rubric:#a8321d; --rubric-soft:#f1d9d2;
+  --sh:#2a78d6; --ma:#eb6834; --gr:#1baf7a; --an:#eda100; --pe:#e87ba4; --oth:#9a9ba1; --sh-late:#86b6ef;
+  --surface:#fbfbf9;
+  --display:"Cormorant Garamond",Georgia,"Times New Roman",serif;
+  --body:"Alegreya",Georgia,"Times New Roman",serif;
+  --ui:"Alegreya Sans","Helvetica Neue",Arial,sans-serif;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --paper:#15161a; --paper-2:#1d1e23; --paper-3:#282a30;
+  --ink:#e9e7df; --ink-2:#b9b7ae; --ink-3:#86857f;
+  --rule:#34363d; --rubric:#e0674f; --rubric-soft:#3a221d;
+  --sh:#3987e5; --ma:#d95926; --gr:#199e70; --an:#c98500; --pe:#d55181; --oth:#6f7079; --sh-late:#2a5f9e;
+  --surface:#1b1c21; color-scheme:dark }}
+:root[data-theme="dark"]{
+  --paper:#15161a; --paper-2:#1d1e23; --paper-3:#282a30;
+  --ink:#e9e7df; --ink-2:#b9b7ae; --ink-3:#86857f;
+  --rule:#34363d; --rubric:#e0674f; --rubric-soft:#3a221d;
+  --sh:#3987e5; --ma:#d95926; --gr:#199e70; --an:#c98500; --pe:#d55181; --oth:#6f7079; --sh-late:#2a5f9e;
+  --surface:#1b1c21; color-scheme:dark }
+
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:18px;line-height:1.55;margin:0;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 64px}
+a{color:var(--rubric)}
+.col{max-width:72ch;margin:0 auto}
+.wide{max-width:1100px;margin:0 auto}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;line-height:1.1;margin:0}
+h1{font-size:clamp(44px,8vw,88px);font-weight:600;letter-spacing:-.01em}
+h2{font-size:clamp(30px,4vw,42px);font-weight:600;margin-top:12px}
+h3{font-size:24px;font-weight:600;margin-top:28px;margin-bottom:6px}
+p{margin:14px 0}
+.eyebrow{font-family:var(--ui);font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--rubric);font-weight:700}
+.small{font-family:var(--ui);font-size:14px;color:var(--ink-2);line-height:1.45}
+.lede{font-size:22px;line-height:1.45;color:var(--ink-2)}
+.lede strong{color:var(--ink)}
+section{padding-block:56px;border-top:1px solid var(--rule)}
+section:first-of-type{border-top:0}
+header.hero{padding-block:72px 48px}
+header.hero .col{display:grid;gap:18px}
+.ornament{font-family:var(--display);color:var(--rubric);font-size:28px;letter-spacing:.4em;text-align:center;margin:8px 0}
+
+/* verdict band */
+.verdict{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:8px}
+.verdict .v{background:var(--paper-2);padding:16px 18px;border-top:3px solid var(--rubric)}
+.verdict .v .k{font-family:var(--display);font-size:30px;font-weight:600;line-height:1}
+.verdict .v .l{font-family:var(--ui);font-size:14px;color:var(--ink-2);margin-top:8px}
+
+/* plates (chart frames) */
+.plate{background:var(--surface);border:1px solid var(--rule);padding:18px 18px 14px;margin:26px auto}
+.plate .cap{font-family:var(--ui);font-size:14px;color:var(--ink-2);margin-top:10px;line-height:1.45}
+.plate .ttl{font-family:var(--ui);font-weight:700;font-size:16px;margin:0 0 2px}
+.plate .sub{font-family:var(--ui);font-size:14px;color:var(--ink-2);margin:0 0 10px}
+.controls{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;margin:8px 0 12px;font-family:var(--ui);font-size:14px}
+.controls label{display:inline-flex;align-items:center;gap:6px;cursor:pointer}
+.seg{display:inline-flex;border:1px solid var(--rule);border-radius:6px;overflow:hidden}
+.seg button{font:inherit;font-family:var(--ui);background:transparent;color:var(--ink-2);border:0;padding:6px 12px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.seg button:focus-visible,select:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid var(--rubric);outline-offset:2px}
+select{font:inherit;font-family:var(--ui);font-size:14px;background:var(--paper-2);color:var(--ink);border:1px solid var(--rule);border-radius:6px;padding:6px 8px}
+input[type=range]{accent-color:var(--rubric)}
+svg{display:block;max-width:100%;height:auto;font-family:var(--ui)}
+svg text{fill:var(--ink-2);font-size:12px}
+svg .ax line,svg .ax path{stroke:var(--rule);stroke-width:1}
+svg .grid line{stroke:var(--paper-3);stroke-width:1}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-family:var(--ui);font-size:14px;color:var(--ink-2);margin:6px 0}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:6px;vertical-align:-1px}
+.sw{display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:5px;vertical-align:-1px}
+.tip{position:fixed;pointer-events:none;background:var(--ink);color:var(--paper);font-family:var(--ui);font-size:13px;line-height:1.4;padding:8px 10px;border-radius:6px;max-width:260px;z-index:20;opacity:0;transition:opacity .08s}
+.tip b{font-weight:700}
+.tip.on{opacity:1}
+.scrollx{overflow-x:auto}
+table{border-collapse:collapse;font-family:var(--ui);font-size:14px;width:100%}
+th,td{text-align:left;padding:6px 8px;border-bottom:1px solid var(--rule);font-variant-numeric:tabular-nums;white-space:nowrap}
+th{font-weight:700;color:var(--ink-2)}
+td.num,th.num{text-align:right}
+.cell{display:inline-block;min-width:44px;text-align:center;padding:2px 6px;border-radius:4px;color:var(--ink)}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:18px}
+.card{background:var(--paper-2);padding:16px 18px;min-width:0}
+.card h4{font-family:var(--display);font-size:22px;margin:0 0 6px;font-weight:600}
+.card p{margin:6px 0;font-size:16px;color:var(--ink-2)}
+details{border-top:1px solid var(--rule);padding:10px 0}
+details summary{cursor:pointer;font-family:var(--ui);font-weight:700;font-size:16px;list-style:none;display:flex;justify-content:space-between}
+details summary::after{content:"+";color:var(--rubric);font-size:20px;line-height:1}
+details[open] summary::after{content:"–"}
+details p{font-size:17px}
+.note{background:var(--rubric-soft);border-left:3px solid var(--rubric);padding:12px 16px;font-size:17px}
+.flow{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;align-items:stretch;margin:18px 0}
+.flow .step{background:var(--paper-2);padding:12px 14px;font-family:var(--ui);font-size:14px;line-height:1.4;min-width:0}
+.flow .step b{display:block;font-size:15px;margin-bottom:4px}
+.kbd{font-family:var(--ui);font-size:13px;background:var(--paper-3);padding:1px 6px;border-radius:4px}
+.toc{display:flex;flex-wrap:wrap;gap:6px 14px;font-family:var(--ui);font-size:14px}
+.toc a{color:var(--ink-2);text-decoration:none;border-bottom:1px solid var(--rule)}
+.toc a:hover{color:var(--rubric);border-color:var(--rubric)}
+.nowrap{white-space:nowrap}
+.bars-row{display:grid;grid-template-columns:1fr;gap:4px}
+.cmp{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media (max-width:700px){.cmp{grid-template-columns:1fr}}
+.quote{font-family:var(--display);font-size:26px;font-style:italic;line-height:1.3;color:var(--ink);margin:22px 0;padding-left:18px;border-left:3px solid var(--rubric)}
+.quote span{display:block;font-style:normal;font-family:var(--ui);font-size:14px;color:var(--ink-3);margin-top:6px}
+@media (prefers-reduced-motion: reduce){*{transition:none!important}}
+.pending{font-family:var(--ui);color:var(--ink-3);padding:30px;text-align:center}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="col">
+    <div class="eyebrow">A computational test · 56 plays · five methods · three corpora</div>
+    <h1>Marlowe or Shakespeare?</h1>
+    <p class="lede">Christopher Marlowe died in a Deptford tavern in May 1593. Within a year or two a playwright named William Shakespeare began to be printed. A long-running theory says they were the same man. <strong>We asked what the texts themselves say when you measure them.</strong></p>
+    <div class="verdict" id="verdict">
+      <div class="v"><div class="k">0.05</div><div class="l">How strongly Shakespeare's early plays outside <i>Henry VI</i> verify as Marlowe (0 to 1). They verify as Shakespeare at 0.89.</div></div>
+      <div class="v"><div class="k">0.86</div><div class="l">Accuracy of a function-word classifier separating Marlowe from those plays. Marlowe vs his imitator Greene: 0.59.</div></div>
+      <div class="v"><div class="k">0.27 = 0.27</div><div class="l">Our first plan was to train a language model on each author and compare their weights. Two models trained on the <em>same</em> author came out no more alike (0.27) than two trained on <em>different</em> authors (0.27), so that method cannot answer the question.</div></div>
+    </div>
+    <p class="small">Short answer: the measurements do not support one author. Marlowe's style does live on in one place, the <i>Henry VI</i> plays, but there it is shared by half a dozen other writers of 1587 to 1592. Scroll for the ideas, the methods, and every result, with controls you can play with.</p>
+    <nav class="toc" aria-label="Sections">
+      <a href="#question">The question</a><a href="#idea">The original idea</a><a href="#method">How we tested</a><a href="#map">Map of the plays</a><a href="#verify">Verification</a><a href="#classify">Classifiers</a><a href="#chars">Character models</a><a href="#scenes">Scene by scene</a><a href="#neural">Neural models</a><a href="#honest">What went wrong</a><a href="#glossary">Glossary</a>
+    </nav>
+  </div>
+</header>
+
+<section id="question">
+  <div class="col">
+    <div class="eyebrow">I · The question</div>
+    <h2>Two canons that almost touch</h2>
+    <p>Marlowe wrote seven surviving plays between about 1587 and 1593. Shakespeare's earliest plays date from 1591 or so. The theory needs the two bodies of work to be one continuous voice. So the fair test is not "does Marlowe sound like <i>Hamlet</i>" but "does Marlowe sound like Shakespeare's work up to 1594, and does he sound <em>more</em> like it than other writers of exactly the same years do?"</p>
+    <p>That last clause is the whole game. Between 1587 and 1592 a dozen playwrights wrote blank-verse heroic drama in the manner Marlowe made famous. If a test cannot tell Marlowe from Robert Greene or George Peele, it cannot tell us anything about Shakespeare either.</p>
+  </div>
+  <div class="wide plate" id="timeline-plate">
+    <p class="ttl">The plays in our corpus, by year</p>
+    <p class="sub">Each mark is one play. Hover for the title. Marlowe died in 1593; the shaded band is the "heroic register" window, 1587 to 1592.</p>
+    <div class="legend" id="timeline-legend"></div>
+    <div id="timeline"></div>
+    <p class="cap">Dates are the usual scholarly estimates of first performance. Shakespeare's plays are split at 1594: "early" is the set the theory needs to match, "later" is a same-author control. Greene, Peele and eight anonymous heroic plays are the "same register, different author" controls.</p>
+  </div>
+</section>
+
+<section id="idea">
+  <div class="col">
+    <div class="eyebrow">II · The original idea</div>
+    <h2>Train two language models and compare their weights</h2>
+    <p>The first proposal was elegant: fine-tune one language model on Marlowe, one on early Shakespeare, and see whether the weights end up in the same place. If one person wrote both, the two models should have learned the same thing.</p>
+    <p>We tried it, and we built the controls that tell you whether it <em>could</em> work. The key question is not "how similar are the Marlowe and Shakespeare models?" but "how similar are two models trained on the same author, and is that any closer than two trained on different authors?" If same-author pairs are no closer than different-author pairs, the method has no author signal, whatever number it gives for the pair you care about.</p>
+    <div class="flow">
+      <div class="step"><b>1 · One starting point</b>GPT-2 small, pretrained. Every model begins from the same weights.</div>
+      <div class="step"><b>2 · Equal diets</b>Thirteen models, each fed exactly 78,818 tokens, an equal share from every play in its set, three passes.</div>
+      <div class="step"><b>3 · Measure the change</b>Subtract the original weights from each. That difference is what the model learned.</div>
+      <div class="step"><b>4 · Compare with controls</b>Cosine similarity between the differences, including same-text/new-seed and same-author/other-plays pairs.</div>
+    </div>
+  </div>
+  <div class="wide plate">
+    <p class="ttl">How similar are the weight changes?</p>
+    <p class="sub">Cosine similarity between fine-tuning deltas. Hover a cell. Rows and columns are the thirteen models.</p>
+    <div class="controls">
+      <span class="seg" role="group" aria-label="Corpus"><button id="tv-main" aria-pressed="true">Folger / EMED corpus</button><button id="tv-ep" aria-pressed="false">All-EarlyPrint corpus</button></span>
+    </div>
+    <div class="cmp">
+      <div id="tv-heat" style="min-width:0"></div>
+      <div id="tv-pairs" style="min-width:0"></div>
+    </div>
+    <p class="cap">Read it like this. The same text trained with a different random seed gives 0.75 to 0.78. Everything else, same author or not, same register or not, sits at 0.19 to 0.30. Two Marlowe models trained on different halves of his canon (0.27) are no closer than Marlowe and Greene (0.27). The weights record which text the model saw. They do not record who wrote it. The Marlowe versus early Shakespeare pair (0.23) lands with the different-register pairs.</p>
+  </div>
+  <div class="col">
+    <p class="note">So the original idea gives a clear answer, just not to the question it was meant for. It tells us that at this scale weight comparison carries no author signal. We then turned to methods that have a track record, and we kept the same discipline: every result has to be read against a same-author benchmark and a different-author benchmark.</p>
+  </div>
+</section>
+
+<section id="method">
+  <div class="col">
+    <div class="eyebrow">III · How we tested</div>
+    <h2>Measure the habits, not the poetry</h2>
+    <p>Authorship tests work on the words a writer does not think about: <i>the, and, of, to, which, that</i>. Everyone uses them, nobody chooses them deliberately, and their rates are remarkably stable for one person across subjects and genres. The big words, the imagery and the characters belong to the play. The little words belong to the writer.</p>
+    <div class="cards">
+      <div class="card"><h4>Function words</h4><p>About 190 grammatical words. Each play becomes a profile of how often it uses each one, standardised across the corpus.</p></div>
+      <div class="card"><h4>Distances and maps</h4><p>Cosine delta between profiles, clustering, and the two-dimensional map in section IV.</p></div>
+      <div class="card"><h4>Chunk classifiers</h4><p>Cut plays into 2,000-word pieces, train a classifier to tell set A from set B, test it on a play it never saw.</p></div>
+      <div class="card"><h4>Impostors verification</h4><p>Is this play nearer to <em>any</em> play by candidate X than to a crowd of random impostors? Repeat 200 times with random features.</p></div>
+      <div class="card"><h4>Character models</h4><p>Six-letter sequence models per author, names masked out, size-matched. How many bits does each author's model need to predict a new play?</p></div>
+      <div class="card"><h4>Neural models</h4><p>GPT-2 fine-tuned per author. Compared by what they predict and by their weights.</p></div>
+    </div>
+    <h3>Three rules we held to</h3>
+    <p><strong>Controls first.</strong> Every number is shown beside what the same test gives for two sets by one author (Shakespeare early vs late, Marlowe early vs late) and for two sets by different authors in the same style (Marlowe vs Greene, Greene vs Peele).</p>
+    <p><strong>Families stay together.</strong> <i>Henry VI</i> 1 to 3, <i>Richard III</i> and the anonymous <i>True Tragedy of Richard III</i> share characters and plot, so they are always held out together. Likewise the two <i>Tamburlaines</i>, the two <i>Shrews</i>, and <i>The Spanish Tragedy</i> with <i>Soliman and Perseda</i>.</p>
+    <p><strong>Three corpora.</strong> Modern editions can carry an editor's spelling habits. We rebuilt the whole study on texts that all came through one pipeline (the 1623 Folio and 1590s quartos from EarlyPrint), and again on Shakespeare's early quartos only. Results that did not replicate were thrown out.</p>
+  </div>
+</section>
+
+<section id="map">
+  <div class="col">
+    <div class="eyebrow">IV · Map of the plays</div>
+    <h2>Fifty-six plays on one sheet</h2>
+    <p>Here every play is placed so that plays with similar function-word habits sit close together. Two dimensions keep about a third of the full distance information, so treat it as a sketch and use the neighbour list for the exact figures.</p>
+  </div>
+  <div class="wide plate">
+    <p class="ttl">Function-word similarity map</p>
+    <p class="sub">Classical multidimensional scaling of cosine-delta distances. Click a play to see its ten nearest neighbours. Shape and colour both mark the author.</p>
+    <div class="controls" id="map-controls"></div>
+    <div class="cmp">
+      <div id="mds-map" style="min-width:0"></div>
+      <div id="neighbours" style="min-width:0"></div>
+    </div>
+    <p class="cap" id="map-cap">Look at where the Marlowe diamonds sit: inside a cloud of Greene, Peele and anonymous heroic plays, with the three <i>Henry VI</i> plays beside them. Now find <i>Titus</i>, <i>Richard III</i>, <i>The Shrew</i>, <i>Two Gentlemen</i> and <i>Errors</i>. They sit with the later Shakespeare circles.</p>
+  </div>
+</section>
+
+<section id="verify">
+  <div class="col">
+    <div class="eyebrow">V · Verification</div>
+    <h2>Could this play be by Marlowe?</h2>
+    <p>The impostors method asks a yes-or-no question per play. In each of 200 rounds it draws a random half of the features and twelve random "impostor" plays, then checks whether the target is nearer to some play by the candidate than to every impostor. The score is the share of rounds that say yes. A play by a known author should score high in its own column and low elsewhere, and the known authors tell us what "high" means here.</p>
+  </div>
+  <div class="wide plate">
+    <p class="ttl">Verification scores by candidate author</p>
+    <p class="sub">Pick a group of target plays. Bars show the mean score as each candidate; dots are the individual plays.</p>
+    <div class="controls">
+      <label for="gi-group">Target plays</label>
+      <select id="gi-group"></select>
+      <span class="seg" role="group" aria-label="Corpus"><button id="gi-main" aria-pressed="true">Folger / EMED</button><button id="gi-ep" aria-pressed="false">All-EarlyPrint</button></span>
+    </div>
+    <div id="gi-chart"></div>
+    <p class="cap" id="gi-cap"></p>
+  </div>
+  <div class="wide plate">
+    <p class="ttl">Every play, every candidate</p>
+    <p class="sub">Darker means a higher score. Rows are target plays; the five columns are the candidate authors.</p>
+    <div class="scrollx" id="gi-table"></div>
+  </div>
+  <div class="col">
+    <p>Two things stand out. Marlowe's own plays verify as Marlowe at only about 0.5, and as Peele at about the same. That is the ceiling of this method inside the heroic register: it simply cannot tell those writers apart. Against that ceiling, Shakespeare's non-<i>Henry VI</i> early plays score 0.05 as Marlowe and 0.89 as Shakespeare, lower as Marlowe than Greene's plays do (0.35). The <i>Henry VI</i> plays score 0.55 as Marlowe, 0.53 as anonymous heroic, 0.38 as Shakespeare. They sit in the crowd.</p>
+  </div>
+</section>
+
+<section id="classify">
+  <div class="col">
+    <div class="eyebrow">VI · Classifiers</div>
+    <h2>Can a machine tell them apart?</h2>
+    <p>A classifier is trained on 2,000-word chunks from two sets of plays, then tested on a play it has never seen. If two sets are by one writer the accuracy should hover near coin-flip, 0.5. If they are by different writers it should climb toward 1. The benchmark pairs tell us where "near 0.5" and "near 1" fall for plays of this period and size.</p>
+  </div>
+  <div class="wide plate">
+    <p class="ttl">Leave-one-play-out accuracy, function words</p>
+    <p class="sub">Sorted by accuracy. Colour marks the kind of pair. Hover for AUC and chunk counts.</p>
+    <div class="controls">
+      <span class="seg" role="group" aria-label="Corpus"><button id="pw-main" aria-pressed="true">Folger / EMED</button><button id="pw-ep" aria-pressed="false">All-EarlyPrint</button></span>
+      <span class="legend"><span><i style="background:var(--rubric)"></i>the question</span><span><i style="background:var(--sh)"></i>same author (benchmark)</span><span><i style="background:var(--ink-3)"></i>different authors (benchmark)</span></span>
+    </div>
+    <div id="pw-chart"></div>
+    <p class="cap">Marlowe vs early Shakespeare without <i>Henry VI</i> scores 0.85, above every same-author pair and above Marlowe vs Greene (0.59) or Marlowe vs Peele (0.60). Marlowe vs the <i>Henry VI</i> plays and <i>Titus</i> scores 0.43, below chance, which is what happens when two sets share a style and the classifier latches on to plays rather than authors. Note that Greene vs Peele also scores only 0.60: this test, like the others, is weak inside the heroic register.</p>
+  </div>
+</section>
+
+<section id="chars">
+  <div class="col">
+    <div class="eyebrow">VII · Character models</div>
+    <h2>Letter by letter, and a lesson about editions</h2>
+    <p>A character model learns how six-letter sequences follow one another in an author's text. Ask it to predict a new play and it needs a certain number of bits per character; the fewer, the more the play "sounds like" the training author. We trained one model per author on equal amounts of text, with all proper names masked so that <i>Tamburlaine</i> does not give itself away.</p>
+    <p>This was where our first report went wrong. On the mixed-edition corpus the Marlowe model recognised Marlowe's plays, and we said so. Then we measured what happens when the <em>same play</em> is swapped for another edition: the cost moved by 0.04 to 0.07 bits per character, the same size as the author effect. On the single-source corpus the recognition vanished.</p>
+  </div>
+  <div class="wide plate">
+    <p class="ttl">Which author's model predicts each play best?</p>
+    <p class="sub">All-EarlyPrint corpus, names masked. Bars show the extra cost under each model relative to the best model for that play (0 = best). Plays are never scored by a model that trained on them.</p>
+    <div class="controls">
+      <label for="ce-play">Play</label><select id="ce-play"></select>
+      <span class="seg" role="group" aria-label="Corpus"><button id="ce-ep" aria-pressed="true">Folio / EarlyPrint</button><button id="ce-q" aria-pressed="false">Quartos only</button></span>
+    </div>
+    <div id="ce-chart"></div>
+    <p class="cap" id="ce-cap"></p>
+  </div>
+  <div class="wide plate">
+    <p class="ttl">The Marlowe gap, play by play</p>
+    <p class="sub">Cost under the Marlowe model minus cost under the later-Shakespeare model, bits per character. Left of zero: the Marlowe model predicts the play better. Hover for values.</p>
+    <div class="controls">
+      <span class="seg" role="group" aria-label="Corpus"><button id="gap-ep" aria-pressed="true">Folio / EarlyPrint</button><button id="gap-q" aria-pressed="false">Quartos only</button></span>
+    </div>
+    <div id="gap-chart"></div>
+    <p class="cap">Greene's and Peele's plays are predicted <em>better</em> by the Marlowe model than Marlowe's own plays are. That is the signature of a register detector, not an author detector. Within that limit the early Shakespeare plays sit between the heroic register and later Shakespeare, <i>Titus</i> nearest the register and <i>Richard III</i> nearest later Shakespeare, which is what chronology and genre would predict for a different author, and is also compatible with one author changing. The character models do not decide the question. On quartos only, <i>Titus</i> and <i>Richard III</i> move toward Marlowe by a few hundredths, and still verify as Shakespeare at 0.91 and as Marlowe at 0.07.</p>
+  </div>
+</section>
+
+<section id="scenes">
+  <div class="col">
+    <div class="eyebrow">VIII · Scene by scene</div>
+    <h2>Inside <i>Henry VI</i></h2>
+    <p>Scholars have long suspected the <i>Henry VI</i> plays are collaborations. The 2016 New Oxford Shakespeare credits Marlowe as co-author of all three. Craig and Kinney found Marlowe's hand specifically in the Jack Cade rebellion scenes of Part 2. We scored every scene with two scorers trained on four authors, with the scanned play's whole family held out of training.</p>
+  </div>
+  <div class="wide plate">
+    <p class="ttl">Scene-level probability of Marlowe</p>
+    <p class="sub">Function-word classifier, four candidates: Marlowe, Shakespeare, Peele, Greene. Bar height is P(Marlowe); hover for the full split. Shaded scenes carry a published attribution.</p>
+    <div class="controls">
+      <label for="sc-play">Play</label><select id="sc-play"></select>
+      <label id="sc-verse-wrap"><input type="checkbox" id="sc-verse"> Verse only (prose removed from training and scoring)</label>
+      <label><input type="checkbox" id="sc-small" checked> Fade scenes under 400 words</label>
+    </div>
+    <div id="sc-chart"></div>
+    <p class="cap" id="sc-cap"></p>
+  </div>
+  <div class="col">
+    <p>The Cade scenes (4.2 to 4.10 of Part 2) lean Marlowe-ward: P(Marlowe) 0.56 against 0.23 for the rest of the play, and the lean survives when verse is compared only with verse (0.71 against 0.33). That matches the published finding. Nothing comparable appears in <i>Richard III</i> (0.10) or <i>Titus</i> (0.08). A first-pass pattern in Part 1 that matched the Nashe/Shakespeare division did not survive the verse-only check, so we do not claim it.</p>
+  </div>
+</section>
+
+<section id="neural">
+  <div class="col">
+    <div class="eyebrow">IX · Neural models</div>
+    <h2>What the fine-tuned models predict</h2>
+    <p>The weight comparison failed, but the same thirteen GPT-2 models can be judged on behaviour: how many bits per token does each need to predict a held-out play? This is the neural version of the character-model test, run on the single-source corpus so no edition effect intrudes.</p>
+  </div>
+  <div class="wide plate">
+    <p class="ttl">Best-predicting model for each play</p>
+    <p class="sub">All-EarlyPrint corpus. Cells show bits per token; the best model in each row is marked. Plays are never scored by a model that trained on them (blank cells). Marlowe plays are scored by the Marlowe model trained on the other half of his canon.</p>
+    <div class="controls"><label for="ppl-filter">Show</label><select id="ppl-filter"><option value="all">all plays</option><option value="q" selected>Marlowe and early Shakespeare</option><option value="ctrl">controls</option></select></div>
+    <div class="scrollx" id="ppl-table"></div>
+    <p class="cap">Marlowe's plays are predicted best by a Peele, Greene or anonymous-heroic model in six of seven cases, not by the model trained on the rest of his own work. <i>Henry VI</i> 1 to 3 and <i>Richard III</i> are predicted best by Shakespeare models, and for <i>Henry VI</i> the Marlowe model is the worst of the heroic-register models. This rests on 1623 printings on both sides and a small token budget, so we report it without leaning on it.</p>
+  </div>
+</section>
+
+<section id="honest">
+  <div class="col">
+    <div class="eyebrow">X · What went wrong, and what we changed</div>
+    <h2>The notebook, not just the report</h2>
+    <p>A study like this is only as good as its willingness to break its own results. These are the things that broke.</p>
+    <details open><summary>Version 1 overstated the character-model evidence</summary><p>We claimed that "Marlowe's plays recognise each other". The claim rested on comparing texts from different editorial pipelines. Measuring the edition effect directly showed it to be as large as the author effect. The claim is withdrawn; word-level tests were unaffected and replicate across corpora.</p></details>
+    <details><summary>A training leak in the first scene scan</summary><p><i>Titus</i> was scored by a model that had seen <i>Titus</i>, producing an absurd result. Every scan now trains fresh models with the scanned play's whole family removed.</p></details>
+    <details><summary>Budget truncation biased the early-Shakespeare model</summary><p>The first character-model run took plays in list order until the budget ran out, so "early Shakespeare" was effectively <i>Henry VI</i> plus <i>Titus</i>. Every model now draws an equal share from every play.</p></details>
+    <details><summary>Proper-noun masking ate the pronoun "I"</summary><p>Capitalisation-based masking treated <i>I</i> and <i>I'll</i> as names. Fixed by exclusion.</p></details>
+    <details><summary>Edward II lost its opening speech</summary><p>The EarlyPrint parser only collected marked speeches; some early quartos have bare lines before the first speaker label. The parser now collects them.</p></details>
+
+    <h3>What would add real information</h3>
+    <p><strong>A method that can split the heroic register.</strong> Word-adjacency networks or Burrows's Zeta, accepted only if they first separate Greene from Peele, two writers we know are different. Until something passes that test, nobody's method can say who wrote the Cade scenes.</p>
+    <p><strong>More tokens per author for the neural models</strong>, run on quarto texts only, to see whether the <i>Henry VI</i> result holds up.</p>
+
+    <h3>Limits to keep in mind</h3>
+    <p>Seven Marlowe plays, two of them damaged texts. Eight early Shakespeare plays, three probably collaborative. Four plays each for Greene and Peele. Every single test here is weak at this size. The strength of the conclusion comes from the same pattern appearing in every method, on every corpus.</p>
+    <div class="quote">If one person had written both canons, Marlowe's hand should be visible across early Shakespeare, more visible there than in Greene and Peele, and visible in the comedies and in <i>Richard III</i>, not only in the plays scholars already consider collaborative. None of that holds.<span>REPORT.md, version 2</span></div>
+  </div>
+</section>
+
+<section id="glossary">
+  <div class="col">
+    <div class="eyebrow">XI · Glossary</div>
+    <h2>Terms used on this page</h2>
+    <details><summary>Function words</summary><p>Grammatical words with little meaning of their own: articles, prepositions, pronouns, conjunctions, auxiliaries. Their frequencies are the backbone of modern authorship attribution.</p></details>
+    <details><summary>Cosine delta</summary><p>A distance between two plays' standardised word-frequency profiles. Zero means identical profiles; values around 1 are typical between unrelated plays here.</p></details>
+    <details><summary>Leave-one-play-out</summary><p>Train on every play except one, test on that one, repeat. It stops a classifier from memorising the play it is being tested on.</p></details>
+    <details><summary>AUC</summary><p>Area under the ROC curve: the chance that a random chunk from set A is scored more A-like than a random chunk from set B. 0.5 is coin-flip, 1 is perfect.</p></details>
+    <details><summary>General Impostors</summary><p>A verification method (Koppel and Winter, 2014). It measures how often a text is nearer to a candidate author than to random impostors, across many random subsets of features.</p></details>
+    <details><summary>Bits per character / per token</summary><p>How surprised a model is by each new character or word-piece. Lower means the text is more like what the model trained on.</p></details>
+    <details><summary>Register</summary><p>A shared style of writing, here the blank-verse heroic drama of 1587 to 1592 that Marlowe popularised and others imitated.</p></details>
+    <details><summary>Task vector / weight delta</summary><p>The difference between a fine-tuned model's weights and the pretrained model's. Cosine similarity between two such vectors measures whether two fine-tunings pushed the model in the same direction.</p></details>
+    <details><summary>Folio and quarto</summary><p>Quartos are the small, cheap individual play editions of the 1590s. The Folio is the large 1623 collected edition of Shakespeare, printed seven years after his death.</p></details>
+    <p class="small" style="margin-top:28px">Texts: Folger Shakespeare Library editions and EMED transcriptions; EarlyPrint / EEBO-TCP for early quartos and the 1623 Folio; Project Gutenberg (Dyce) for cross-checks. All scripts, corpora, result tables and the lab notebook are in the project repository. Report version 2, 30 October 2026.</p>
+  </div>
+</section>
+
+<div class="tip" id="tip" role="status" aria-live="polite"></div>
+
+<script>
+(async function(){
+const $=s=>document.querySelector(s);
+const tip=$('#tip');
+function showTip(e,html){tip.innerHTML=html;tip.classList.add('on');moveTip(e)}
+function moveTip(e){const w=tip.offsetWidth,h=tip.offsetHeight;let x=e.clientX+14,y=e.clientY+14;if(x+w>innerWidth-8)x=e.clientX-w-14;if(y+h>innerHeight-8)y=e.clientY-h-14;tip.style.left=x+'px';tip.style.top=y+'px'}
+function hideTip(){tip.classList.remove('on')}
+function bind(el,html){el.addEventListener('mouseenter',e=>showTip(e,typeof html==='function'?html():html));el.addEventListener('mousemove',moveTip);el.addEventListener('mouseleave',hideTip);el.addEventListener('focus',e=>{const r=el.getBoundingClientRect();showTip({clientX:r.left+r.width/2,clientY:r.top},typeof html==='function'?html():html)});el.addEventListener('blur',hideTip)}
+const NS='http://www.w3.org/2000/svg';
+function el(tag,attrs,parent){const n=document.createElementNS(NS,tag);for(const k in attrs)n.setAttribute(k,attrs[k]);if(parent)parent.appendChild(n);return n}
+function svgRoot(w,h,parent){const s=el('svg',{viewBox:`0 0 ${w} ${h}`,width:'100%',role:'img'});parent.innerHTML='';parent.appendChild(s);return s}
+const fmt=(x,d=2)=>x==null?'–':(+x).toFixed(d);
+const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');
+
+let D;
+try{D=await (await fetch('data.json')).json()}catch(e){document.querySelectorAll('.plate').forEach(p=>p.insertAdjacentHTML('beforeend','<p class="pending">The data file did not load.</p>'));return}
+
+const plays=D.plays, byId={};plays.forEach(p=>byId[p.id]=p);
+const COL={Marlowe:'var(--ma)',Shakespeare:'var(--sh)','Shakespeare later':'var(--sh-late)',Greene:'var(--gr)',Peele:'var(--pe)','Anon heroic':'var(--an)',Other:'var(--oth)'};
+function cat(p){if(p.author==='Marlowe')return 'Marlowe';if(p.group==='shakespeare_early')return 'Shakespeare';if(p.group==='shakespeare_later')return 'Shakespeare later';if(p.author==='Greene')return 'Greene';if(p.author==='Peele')return 'Peele';if(p.group==='control_ep'&&p.author.startsWith('Anon'))return 'Anon heroic';return 'Other'}
+const H6=new Set(['1H6','2H6','3H6']);
+const NONH6=['Tit','R3','Shr','TGV','Err'];
+const title=id=>byId[id]?byId[id].title:(D.ce_ep_meta[id]?D.ce_ep_meta[id].title:id);
+function mark(parent,cat,x,y,r,extra){ // shape per author
+  const a=Object.assign({fill:COL[cat],stroke:'var(--surface)','stroke-width':2},extra||{});
+  if(cat==='Marlowe')return el('path',Object.assign({d:`M${x} ${y-r*1.3}L${x+r*1.3} ${y}L${x} ${y+r*1.3}L${x-r*1.3} ${y}Z`},a),parent);
+  if(cat==='Greene')return el('rect',Object.assign({x:x-r,y:y-r,width:2*r,height:2*r},a),parent);
+  if(cat==='Peele')return el('path',Object.assign({d:`M${x} ${y-r*1.25}L${x+r*1.2} ${y+r*0.9}L${x-r*1.2} ${y+r*0.9}Z`},a),parent);
+  if(cat==='Anon heroic')return el('path',Object.assign({d:`M${x-r} ${y-r}L${x+r} ${y+r}M${x+r} ${y-r}L${x-r} ${y+r}`,stroke:COL[cat],'stroke-width':3,fill:'none'},{}),parent);
+  if(cat==='Shakespeare later')return el('circle',Object.assign({cx:x,cy:y,r:r},a,{fill:'var(--surface)',stroke:'var(--sh)','stroke-width':2.5}),parent);
+  return el('circle',Object.assign({cx:x,cy:y,r:r},a),parent);
+}
+function legendHTML(cats){return cats.map(c=>`<span><i style="background:${COL[c]};${c==='Shakespeare later'?'background:var(--surface);border:2px solid var(--sh)':''}"></i>${c==='Shakespeare'?'Shakespeare, to 1594':c==='Shakespeare later'?'Shakespeare, 1595 on':c==='Anon heroic'?'Anonymous heroic 1587-93':c==='Other'?'Other controls (Kyd, Lyly, Dekker, Fletcher…)':c}</span>`).join('')}
+
+/* ---------- Timeline ---------- */
+(function(){
+  const W=1060,H=300,m={l:84,r:20,t:30,b:36};
+  const s=svgRoot(W,H,$('#timeline'));
+  const years=plays.map(p=>+p.date);const y0=1586,y1=1634;
+  const x=yr=>m.l+(yr-y0)/(y1-y0)*(W-m.l-m.r);
+  el('rect',{x:x(1587),y:m.t-10,width:x(1592.9)-x(1587),height:H-m.t-m.b+10,fill:'var(--rubric-soft)',opacity:.6},s);
+  el('text',{x:x(1587)+6,y:m.t,'font-size':12,fill:'var(--rubric)','font-weight':700},s).textContent='heroic register 1587-92';
+  const dl=el('line',{x1:x(1593.4),x2:x(1593.4),y1:m.t-10,y2:H-m.b,stroke:'var(--rubric)','stroke-width':1.5,'stroke-dasharray':'3 3'},s);
+  el('text',{x:x(1593.4)+5,y:H-m.b-6,'font-size':12,fill:'var(--rubric)'},s).textContent='Marlowe dies, May 1593';
+  const ax=el('g',{class:'ax'},s);el('line',{x1:m.l,x2:W-m.r,y1:H-m.b,y2:H-m.b},ax);
+  for(let yr=1590;yr<=1630;yr+=5){el('line',{x1:x(yr),x2:x(yr),y1:H-m.b,y2:H-m.b+5},ax);el('text',{x:x(yr),y:H-m.b+20,'text-anchor':'middle'},s).textContent=yr}
+  const lanes={Marlowe:0,Shakespeare:1,'Shakespeare later':1,Greene:2,Peele:3,'Anon heroic':4,Other:5};
+  const laneNames=['Marlowe','Shakespeare','Greene','Peele','Anon. heroic','Other'];
+  const laneH=(H-m.t-m.b-10)/6;
+  laneNames.forEach((n,i)=>{el('text',{x:m.l-4,y:m.t+laneH*i+laneH/2+4,'text-anchor':'end','font-size':11},s).textContent=n});
+  const stack={};
+  plays.slice().sort((a,b)=>a.date-b.date).forEach(p=>{const c=cat(p);const k=lanes[c]+'-'+p.date;stack[k]=(stack[k]||0)+1;const cx=x(+p.date),cy=m.t+laneH*lanes[c]+laneH/2+((stack[k]-1)%3-1)*9;
+    const g=el('g',{tabindex:0,style:'cursor:default'},s);mark(g,c,cx,cy,6);
+    bind(g,`<b>${esc(p.title)}</b><br>${esc(p.author)}, ${p.date}${p.words?`<br>${p.words.toLocaleString()} words of dialogue`:''}`)});
+  $('#timeline-legend').innerHTML=legendHTML(['Marlowe','Shakespeare','Shakespeare later','Greene','Peele','Anon heroic','Other']);
+})();
+
+/* ---------- Task vectors ---------- */
+function drawTV(which){
+  const T=which==='ep'?D.tv_ep:D.tv;const n=T.names.length;const W=520,cell=Math.floor((W-110)/n),H=110+cell*n;
+  const s=svgRoot(W,H,$('#tv-heat'));
+  const pretty=nm=>nm.replace('ShLater','Sh-later').replace('ShEarlyNonH6','Sh-early (no H6)').replace('AnonHeroic','Anon heroic').replace('_s','·seed').replace('_A','·A').replace('_B','·B');
+  const color=v=>{const t=Math.max(0,Math.min(1,(v-0.15)/(0.85-0.15)));return `color-mix(in oklab, var(--paper-2), var(--sh) ${Math.round(t*100)}%)`};
+  T.names.forEach((nm,i)=>{const t=el('text',{x:105,y:110+cell*i+cell/2+4,'text-anchor':'end','font-size':11},s);t.textContent=pretty(nm);
+    const tt=el('text',{x:110+cell*i+cell/2,y:104,'text-anchor':'start','font-size':11,transform:`rotate(-60 ${110+cell*i+cell/2} 104)`},s);tt.textContent=pretty(nm)});
+  for(let i=0;i<n;i++)for(let j=0;j<n;j++){const v=T.cosine[i][j];const r=el('rect',{x:110+cell*j+1,y:110+cell*i+1,width:cell-2,height:cell-2,fill:i===j?'var(--paper-3)':color(v),tabindex:0},s);
+    bind(r,`<b>${esc(pretty(T.names[i]))}</b> vs <b>${esc(pretty(T.names[j]))}</b><br>cosine ${i===j?'1 (itself)':fmt(v,3)}`)}
+  // key pairs bars
+  const pairs=[['Marlowe_s1','Marlowe_s2','same text, new seed','seed'],['ShLater_s1','ShLater_s2','same text, new seed','seed'],['Marlowe_A','Marlowe_B','same author, other plays','same'],['ShLater_A','ShLater_B','same author, other plays','same'],['ShEarlyNonH6','ShLater_s1','same author, other period','same'],['Marlowe_s1','Greene','different author, same register','diff'],['Marlowe_s1','Peele','different author, same register','diff'],['Marlowe_s1','AnonHeroic','different author, same register','diff'],['Greene','Peele','different author, same register','diff'],['Marlowe_s1','ShEarlyNonH6','THE QUESTION: Marlowe vs early Shakespeare','q'],['Marlowe_s1','ShLater_s1','Marlowe vs later Shakespeare','q'],['ShEarlyNonH6','Peele','different author and register','diff'],['Marlowe_s1','Fletcher','different author and register','diff']].filter(p=>T.names.includes(p[0])&&T.names.includes(p[1]));
+  const idx=nm=>T.names.indexOf(nm);
+  const rows=pairs.map(p=>({a:p[0],b:p[1],lab:p[2],type:p[3],v:T.cosine[idx(p[0])][idx(p[1])]}));
+  const W2=520,rh=26,H2=40+rh*rows.length;const s2=svgRoot(W2,H2,$('#tv-pairs'));
+  const x=v=>230+v*(W2-250);
+  el('text',{x:230,y:14,'font-size':12,'font-weight':700,fill:'var(--ink)'},s2).textContent='Cosine similarity of weight deltas';
+  [0,.25,.5,.75,1].forEach(v=>{el('line',{x1:x(v),x2:x(v),y1:24,y2:H2-16,class:'grid',stroke:'var(--paper-3)'},s2);el('text',{x:x(v),y:H2-2,'text-anchor':'middle','font-size':11},s2).textContent=v});
+  const tcol={seed:'var(--ink-3)',same:'var(--sh)',diff:'var(--ink-3)',q:'var(--rubric)'};
+  rows.forEach((r,i)=>{const y=30+rh*i;const t=el('text',{x:224,y:y+15,'text-anchor':'end','font-size':11,fill:r.type==='q'?'var(--rubric)':'var(--ink-2)','font-weight':r.type==='q'?700:400},s2);t.textContent=pretty(r.a)+' · '+pretty(r.b);
+    const bar=el('rect',{x:x(0),y:y+4,width:x(r.v)-x(0),height:16,fill:tcol[r.type],rx:0,tabindex:0},s2);el('path',{d:`M${x(r.v)-4} ${y+4}h4a4 4 0 0 1 4 4v8a4 4 0 0 1-4 4h-4z`,fill:tcol[r.type]},s2);
+    el('text',{x:x(r.v)+10,y:y+16,'font-size':11,fill:'var(--ink)'},s2).textContent=fmt(r.v,2);
+    bind(bar,`<b>${esc(r.lab)}</b><br>${esc(pretty(r.a))} vs ${esc(pretty(r.b))}<br>cosine ${fmt(r.v,3)}`)});
+  el('text',{x:230,y:H2-16,'font-size':10,fill:'var(--ink-3)'},s2).textContent='';
+}
+drawTV('main');
+$('#tv-main').onclick=()=>{drawTV('main');$('#tv-main').setAttribute('aria-pressed','true');$('#tv-ep').setAttribute('aria-pressed','false')};
+$('#tv-ep').onclick=()=>{drawTV('ep');$('#tv-ep').setAttribute('aria-pressed','true');$('#tv-main').setAttribute('aria-pressed','false')};
+
+/* ---------- MDS map ---------- */
+(function(){
+  const cats=['Marlowe','Shakespeare','Shakespeare later','Greene','Peele','Anon heroic','Other'];
+  const on=new Set(cats);let sel='2H6';
+  const ctl=$('#map-controls');
+  ctl.innerHTML=cats.map(c=>`<label><input type="checkbox" id="mc-${c.replace(/\W/g,'')}" data-c="${c}" checked> ${legendHTML([c])}</label>`).join('')+`<label><input type="checkbox" id="mc-labels"> Show all titles</label>`;
+  ctl.querySelectorAll('input[data-c]').forEach(i=>i.onchange=()=>{i.checked?on.add(i.dataset.c):on.delete(i.dataset.c);draw()});
+  $('#mc-labels').onchange=draw;
+  const pts=plays.filter(p=>D.mds[p.id]).map(p=>({p,c:cat(p),x:D.mds[p.id][0],y:D.mds[p.id][1]}));
+  const xs=pts.map(d=>d.x),ys=pts.map(d=>d.y);const xmin=Math.min(...xs),xmax=Math.max(...xs),ymin=Math.min(...ys),ymax=Math.max(...ys);
+  function draw(){
+    const W=560,H=500,m=24;const s=svgRoot(W,H,$('#mds-map'));
+    const X=v=>m+(v-xmin)/(xmax-xmin)*(W-2*m),Y=v=>H-m-(v-ymin)/(ymax-ymin)*(H-2*m);
+    el('rect',{x:0,y:0,width:W,height:H,fill:'var(--surface)'},s);
+    el('text',{x:W-m,y:H-6,'text-anchor':'end','font-size':11,fill:'var(--ink-3)'},s).textContent=`dimension 1 (${Math.round(D.mds_var[0]*100)}% of variance)`;
+    el('text',{x:6,y:14,'font-size':11,fill:'var(--ink-3)'},s).textContent=`dimension 2 (${Math.round(D.mds_var[1]*100)}%)`;
+    const showAll=$('#mc-labels').checked;
+    // neighbour lines
+    if(sel&&D.dist[sel]){const nb=Object.entries(D.dist[sel]).filter(([k])=>k!==sel&&byId[k]&&on.has(cat(byId[k]))).sort((a,b)=>a[1]-b[1]).slice(0,10);
+      nb.forEach(([k])=>{const a=D.mds[sel],b=D.mds[k];el('line',{x1:X(a[0]),y1:Y(a[1]),x2:X(b[0]),y2:Y(b[1]),stroke:'var(--rubric)','stroke-width':1,opacity:.5},s)})}
+    pts.forEach(d=>{if(!on.has(d.c))return;const g=el('g',{tabindex:0,style:'cursor:pointer'},s);const isSel=d.p.id===sel;
+      mark(g,d.c,X(d.x),Y(d.y),isSel?9:6,isSel?{stroke:'var(--rubric)','stroke-width':3}:{});
+      if(showAll||isSel||['1Tam','Ed2','R3','Tit','Ham','2H6','FriarBacon','Alcazar','TTR3','Err'].includes(d.p.id)){const t=el('text',{x:X(d.x)+9,y:Y(d.y)+4,'font-size':11,fill:isSel?'var(--rubric)':'var(--ink-2)','font-weight':isSel?700:400,'paint-order':'stroke',stroke:'var(--surface)','stroke-width':3},s);t.textContent=showAll||isSel?d.p.title.replace(/^(The|A) /,'').slice(0,28):d.p.id}
+      bind(g,`<b>${esc(d.p.title)}</b><br>${esc(d.p.author)}, ${d.p.date}<br><span style="opacity:.8">click for nearest neighbours</span>`);
+      g.onclick=()=>{sel=d.p.id;draw()};g.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){sel=d.p.id;draw();e.preventDefault()}}});
+    neighbours();
+  }
+  function neighbours(){
+    const box=$('#neighbours');if(!sel){box.innerHTML='';return}
+    const nb=Object.entries(D.dist[sel]).filter(([k])=>k!==sel&&byId[k]).sort((a,b)=>a[1]-b[1]).slice(0,10);
+    const W=460,rh=28,H=50+rh*nb.length;const s=svgRoot(W,H,box);
+    const p=byId[sel];
+    el('text',{x:0,y:16,'font-size':14,'font-weight':700,fill:'var(--ink)'},s).textContent=`Nearest to ${p.title.slice(0,34)}`;
+    el('text',{x:0,y:34,'font-size':12,fill:'var(--ink-2)'},s).textContent=`${p.author}, ${p.date} · cosine delta, smaller = closer`;
+    const maxd=1.2;const x=v=>200+Math.min(v,maxd)/maxd*(W-230);
+    nb.forEach(([k,v],i)=>{const y=46+rh*i;const q=byId[k];const c=cat(q);
+      const t=el('text',{x:194,y:y+15,'text-anchor':'end','font-size':12,fill:'var(--ink-2)'},s);t.textContent=q.title.replace(/^(The|A) /,'').slice(0,26);
+      el('rect',{x:200,y:y+4,width:x(v)-200,height:16,fill:COL[c]},s);
+      el('text',{x:x(v)+8,y:y+16,'font-size':11,fill:'var(--ink)'},s).textContent=fmt(v,2);
+      const g=el('rect',{x:0,y:y,width:W,height:rh,fill:'transparent',tabindex:0,style:'cursor:pointer'},s);bind(g,`<b>${esc(q.title)}</b><br>${esc(q.author)}, ${q.date}<br>distance ${fmt(v,3)}`);g.onclick=()=>{sel=k;draw()}});
+  }
+  draw();
+})();
+
+/* ---------- GI ---------- */
+(function(){
+  const groups={
+    'Marlowe plays':plays.filter(p=>p.author==='Marlowe').map(p=>p.id),
+    'Shakespeare early, Henry VI excluded':NONH6,
+    'Henry VI, Parts 1-3':['1H6','2H6','3H6'],
+    'Shakespeare later (1595 on)':plays.filter(p=>p.group==='shakespeare_later').map(p=>p.id),
+    'Greene':plays.filter(p=>p.author==='Greene').map(p=>p.id),
+    'Peele':plays.filter(p=>p.author==='Peele').map(p=>p.id),
+    'Anonymous heroic plays':plays.filter(p=>cat(p)==='Anon heroic').map(p=>p.id),
+    'Kyd, The Spanish Tragedy':['ST']};
+  const sel=$('#gi-group');Object.keys(groups).forEach(g=>{const o=document.createElement('option');o.value=g;o.textContent=g;sel.appendChild(o)});sel.value='Shakespeare early, Henry VI excluded';
+  let corpus='main';
+  const CANDS=['Marlowe','Shakespeare','Greene','Peele','Anon-heroic'];const CC={Marlowe:'var(--ma)',Shakespeare:'var(--sh)',Greene:'var(--gr)',Peele:'var(--pe)','Anon-heroic':'var(--an)'};
+  const caps={'Marlowe plays':'Marlowe\'s own plays verify as Marlowe at about 0.5 and as Peele at about 0.5. This is the method\'s ceiling inside the heroic register: it cannot separate those two writers. Both Tamburlaines score 0.99 as Peele.',
+    'Shakespeare early, Henry VI excluded':'Titus, Richard III, The Shrew, Two Gentlemen and Errors: 0.05 as Marlowe, 0.89 as Shakespeare. Lower as Marlowe than Greene\'s plays are, and far below the 0.47 to 0.67 that known authors reach in their own column.',
+    'Henry VI, Parts 1-3':'The three Henry VI plays score as Marlowe (0.55), as anonymous heroic (0.53) and as Shakespeare (0.38) all at once. They belong to the register, and the register is crowded.',
+    'Shakespeare later (1595 on)':'The same-author control: later Shakespeare verifies as Shakespeare at 0.97 and as nothing else.',
+    'Greene':'Greene, a different author in Marlowe\'s register, scores 0.35 as Marlowe, seven times what early non-Henry VI Shakespeare does.',
+    'Peele':'Peele scores 0.52 as Marlowe, as high as Marlowe\'s own plays do. The two are inseparable by this method.',
+    'Anonymous heroic plays':'The eight anonymous plays of 1587 to 1593 score 0.60 as Marlowe. Marlovian style was the house style of the moment.',
+    'Kyd, The Spanish Tragedy':'Kyd\'s single play scores high as both Marlowe and Shakespeare, a reminder of how little one play can settle.'};
+  function draw(){
+    const G=corpus==='ep'?D.gi_ep:D.gi;const ids=groups[sel.value].filter(i=>G[i]);
+    const W=1060,H=270,m={l:40,r:20,t:20,b:40};const s=svgRoot(W,H,$('#gi-chart'));
+    const bw=(W-m.l-m.r)/CANDS.length;const y=v=>H-m.b-v*(H-m.t-m.b);
+    const ax=el('g',{class:'ax'},s);[0,.25,.5,.75,1].forEach(v=>{el('line',{x1:m.l,x2:W-m.r,y1:y(v),y2:y(v),stroke:'var(--paper-3)'},s);el('text',{x:m.l-6,y:y(v)+4,'text-anchor':'end','font-size':11},s).textContent=v});
+    CANDS.forEach((c,i)=>{const vals=ids.map(id=>G[id][c]).filter(v=>v!=null);const mean=vals.reduce((a,b)=>a+b,0)/vals.length;const cx=m.l+bw*i+bw/2;
+      const r=el('rect',{x:cx-24,y:y(mean),width:48,height:y(0)-y(mean),fill:CC[c],tabindex:0},s);
+      el('text',{x:cx,y:y(mean)-6,'text-anchor':'middle','font-size':13,'font-weight':700,fill:'var(--ink)'},s).textContent=fmt(mean,2);
+      el('text',{x:cx,y:H-m.b+18,'text-anchor':'middle','font-size':12},s).textContent='as '+(c==='Anon-heroic'?'Anon. heroic':c);
+      bind(r,`<b>mean score as ${esc(c)}</b>: ${fmt(mean,2)}<br>${ids.length} target plays`);
+      ids.forEach((id,j)=>{const v=G[id][c];if(v==null)return;const px=cx+((j%5)-2)*9+ (j>=5?4:0);const d=el('circle',{cx:px,cy:y(v),r:4.5,fill:'var(--ink)',stroke:'var(--surface)','stroke-width':2,tabindex:0},s);bind(d,`<b>${esc(title(id))}</b><br>as ${esc(c)}: ${fmt(v,2)}`)})});
+    $('#gi-cap').textContent=caps[sel.value]+(corpus==='ep'?' (All-EarlyPrint corpus: single-source texts, 1623 Folio for Shakespeare.)':'');
+    table(G);
+  }
+  function table(G){
+    const ids=Object.keys(G).filter(id=>byId[id]||D.ce_ep_meta[id]);
+    const col=v=>`background:color-mix(in oklab, var(--paper-2), var(--sh) ${Math.round(v*85)}%);color:${v>0.55?'#fff':'var(--ink)'}`;
+    const auth=id=>byId[id]?byId[id].author:D.ce_ep_meta[id].author;
+    const rows=ids.map(id=>`<tr><td>${esc(title(id))}</td><td>${esc(auth(id))}</td>${CANDS.map(c=>`<td class="num"><span class="cell" style="${col(G[id][c]||0)}">${fmt(G[id][c],2)}</span></td>`).join('')}</tr>`).join('');
+    $('#gi-table').innerHTML=`<table><thead><tr><th>play</th><th>author</th>${CANDS.map(c=>`<th class="num">as ${c}</th>`).join('')}</tr></thead><tbody>${rows}</tbody></table>`;
+  }
+  sel.onchange=draw;
+  $('#gi-main').onclick=()=>{corpus='main';$('#gi-main').setAttribute('aria-pressed','true');$('#gi-ep').setAttribute('aria-pressed','false');draw()};
+  $('#gi-ep').onclick=()=>{corpus='ep';$('#gi-ep').setAttribute('aria-pressed','true');$('#gi-main').setAttribute('aria-pressed','false');draw()};
+  draw();
+})();
+
+/* ---------- Pairwise classifiers ---------- */
+(function(){
+  let corpus='main';
+  function draw(){
+    const rows=(corpus==='ep'?D.pairwise_ep:D.pairwise).filter((r,i,a)=>a.findIndex(x=>x.name===r.name)===i&&!/repeat/.test(r.name)).slice().sort((a,b)=>b.acc-a.acc);
+    const W=1060,rh=24,m={l:400,r:60,t:24,b:28},H=m.t+m.b+rh*rows.length;const s=svgRoot(W,H,$('#pw-chart'));
+    const x=v=>m.l+v*(W-m.l-m.r);
+    [0,.25,.5,.75,1].forEach(v=>{el('line',{x1:x(v),x2:x(v),y1:m.t-6,y2:H-m.b+4,stroke:v===0.5?'var(--ink-3)':'var(--paper-3)','stroke-dasharray':v===0.5?'3 3':''},s);el('text',{x:x(v),y:H-6,'text-anchor':'middle','font-size':11},s).textContent=v===0.5?'0.5 chance':v});
+    const tc={QUESTION:'var(--rubric)','SAME-AUTHOR':'var(--sh)',DIFFERENT:'var(--ink-3)'};
+    rows.forEach((r,i)=>{const y=m.t+rh*i;const t=el('text',{x:m.l-8,y:y+15,'text-anchor':'end','font-size':12,fill:r.type==='QUESTION'?'var(--rubric)':'var(--ink-2)','font-weight':r.type==='QUESTION'?700:400},s);t.textContent=r.name.length>58?r.name.slice(0,56)+'…':r.name;
+      const b=el('rect',{x:x(0),y:y+4,width:x(r.acc)-x(0),height:14,fill:tc[r.type],tabindex:0},s);
+      el('text',{x:x(r.acc)+6,y:y+15,'font-size':11,fill:'var(--ink)'},s).textContent=fmt(r.acc,2);
+      bind(b,`<b>${esc(r.name)}</b><br>${r.type==='QUESTION'?'the question':r.type==='SAME-AUTHOR'?'same author, benchmark':'different authors, benchmark'}<br>accuracy ${fmt(r.acc,2)} · AUC ${fmt(r.auc,2)}<br>${r.nA} vs ${r.nB} plays, ${r.chunks} chunks`)});
+  }
+  $('#pw-main').onclick=()=>{corpus='main';$('#pw-main').setAttribute('aria-pressed','true');$('#pw-ep').setAttribute('aria-pressed','false');draw()};
+  $('#pw-ep').onclick=()=>{corpus='ep';$('#pw-ep').setAttribute('aria-pressed','true');$('#pw-main').setAttribute('aria-pressed','false');draw()};
+  draw();
+})();
+
+/* ---------- Character models ---------- */
+(function(){
+  const M=['Marlowe','Sh-early','Sh-later','Greene','Peele','Anon-heroic'];const MC={Marlowe:'var(--ma)','Sh-early':'var(--sh)','Sh-later':'var(--sh-late)',Greene:'var(--gr)',Peele:'var(--pe)','Anon-heroic':'var(--an)'};
+  const MN={Marlowe:'Marlowe','Sh-early':'Shakespeare early','Sh-later':'Shakespeare later',Greene:'Greene',Peele:'Peele','Anon-heroic':'Anon. heroic'};
+  let corpus='ep';const sel=$('#ce-play');
+  function data(){return corpus==='q'?D.ce_q:D.ce_ep}
+  function fill(){const ids=Object.keys(data()).filter(id=>D.ce_ep_meta[id]||byId[id]);sel.innerHTML='';ids.forEach(id=>{const o=document.createElement('option');o.value=id;o.textContent=`${title(id)} (${(D.ce_ep_meta[id]||byId[id]).author})`;sel.appendChild(o)});if(ids.includes('2H6'))sel.value='2H6'}
+  function meta(id){return D.ce_ep_meta[id]||byId[id]}
+  function draw(){
+    const r=data()[sel.value];if(!r)return;const vals=M.map(m=>r[m]).filter(v=>v!=null);const best=Math.min(...vals);
+    const W=1060,rh=30,m={l:150,r:80,t:10,b:30},H=m.t+m.b+rh*M.length;const s=svgRoot(W,H,$('#ce-chart'));
+    const maxd=Math.max(0.15,...vals.map(v=>v-best));const x=v=>m.l+v/maxd*(W-m.l-m.r);
+    [0,.05,.1,.15,.2,.25,.3].filter(v=>v<=maxd).forEach(v=>{el('line',{x1:x(v),x2:x(v),y1:m.t,y2:H-m.b+4,stroke:'var(--paper-3)'},s);el('text',{x:x(v),y:H-8,'text-anchor':'middle','font-size':11},s).textContent=v===0?'best':'+'+v.toFixed(2)});
+    M.forEach((mm,i)=>{const y=m.t+rh*i;const v=r[mm];const t=el('text',{x:m.l-8,y:y+19,'text-anchor':'end','font-size':12},s);t.textContent=MN[mm];
+      if(v==null){el('text',{x:m.l+4,y:y+19,'font-size':11,fill:'var(--ink-3)'},s).textContent='trained on this play (not scored)';return}
+      const d=v-best;const b=el('rect',{x:x(0),y:y+6,width:Math.max(2,x(d)-x(0)),height:18,fill:MC[mm],tabindex:0},s);
+      el('text',{x:x(d)+8,y:y+20,'font-size':12,fill:'var(--ink)','font-weight':d===0?700:400},s).textContent=(d===0?'best · ':'+'+d.toFixed(3)+' · ')+v.toFixed(3)+' bits/char';
+      bind(b,`<b>${esc(MN[mm])} model</b><br>${v.toFixed(4)} bits/char<br>${d===0?'best model for this play':'+'+d.toFixed(4)+' over the best'}`)});
+    const bestM=M.find(mm=>r[mm]===best);const mt=meta(sel.value);
+    $('#ce-cap').textContent=`${title(sel.value)} (${mt.author}, ${mt.date}) is predicted best by the ${MN[bestM]} model${corpus==='q'?' on the quarto corpus':''}. Differences under about 0.03 bits per character are within the range an edition change alone can produce.`;
+  }
+  sel.onchange=draw;fill();draw();
+  $('#ce-ep').onclick=()=>{corpus='ep';$('#ce-ep').setAttribute('aria-pressed','true');$('#ce-q').setAttribute('aria-pressed','false');const v=sel.value;fill();if([...sel.options].some(o=>o.value===v))sel.value=v;draw()};
+  $('#ce-q').onclick=()=>{corpus='q';$('#ce-q').setAttribute('aria-pressed','true');$('#ce-ep').setAttribute('aria-pressed','false');const v=sel.value;fill();if([...sel.options].some(o=>o.value===v))sel.value=v;draw()};
+
+  // gap chart
+  let gc='ep';
+  function gap(){
+    const d=gc==='q'?D.ce_q:D.ce_ep;
+    const rows=Object.keys(d).filter(id=>d[id].Marlowe!=null&&d[id]['Sh-later']!=null&&(D.ce_ep_meta[id]||byId[id])).map(id=>({id,g:d[id].Marlowe-d[id]['Sh-later'],m:D.ce_ep_meta[id]||byId[id]})).sort((a,b)=>a.g-b.g);
+    const W=1060,rh=16,m={l:230,r:40,t:26,b:26},H=m.t+m.b+rh*rows.length;const s=svgRoot(W,H,$('#gap-chart'));
+    const lo=Math.min(-0.15,...rows.map(r=>r.g)),hi=Math.max(0.2,...rows.map(r=>r.g));const x=v=>m.l+(v-lo)/(hi-lo)*(W-m.l-m.r);
+    for(let v=-0.15;v<=hi+1e-9;v+=0.05){el('line',{x1:x(v),x2:x(v),y1:m.t-8,y2:H-m.b+4,stroke:Math.abs(v)<1e-9?'var(--ink-3)':'var(--paper-3)'},s);el('text',{x:x(v),y:H-8,'text-anchor':'middle','font-size':11},s).textContent=(v>0?'+':'')+v.toFixed(2)}
+    el('text',{x:x(lo)+2,y:m.t-12,'font-size':11,fill:'var(--ink-3)'},s).textContent='← Marlowe model predicts better';
+    el('text',{x:x(hi)-2,y:m.t-12,'font-size':11,fill:'var(--ink-3)','text-anchor':'end'},s).textContent='later-Shakespeare model predicts better →';
+    rows.forEach((r,i)=>{const y=m.t+rh*i;const c=cat({author:r.m.author,group:r.m.group});const t=el('text',{x:m.l-8,y:y+12,'text-anchor':'end','font-size':11,fill:'var(--ink-2)'},s);t.textContent=r.m.title.replace(/^(The|A) /,'').slice(0,34);
+      const b=el('rect',{x:Math.min(x(0),x(r.g)),y:y+3,width:Math.max(2,Math.abs(x(r.g)-x(0))),height:10,fill:COL[c],tabindex:0},s);
+      bind(b,`<b>${esc(r.m.title)}</b><br>${esc(r.m.author)}, ${r.m.date}<br>gap ${(r.g>0?'+':'')+r.g.toFixed(3)} bits/char`)});
+  }
+  gap();
+  $('#gap-ep').onclick=()=>{gc='ep';$('#gap-ep').setAttribute('aria-pressed','true');$('#gap-q').setAttribute('aria-pressed','false');gap()};
+  $('#gap-q').onclick=()=>{gc='q';$('#gap-q').setAttribute('aria-pressed','true');$('#gap-ep').setAttribute('aria-pressed','false');gap()};
+})();
+
+/* ---------- Scene scan ---------- */
+(function(){
+  const sel=$('#sc-play');const names={'1H6':'Henry VI, Part 1','2H6':'Henry VI, Part 2','3H6':'Henry VI, Part 3','R3':'Richard III','Tit':'Titus Andronicus'};
+  Object.keys(D.scenes).forEach(k=>{const o=document.createElement('option');o.value=k;o.textContent=names[k];sel.appendChild(o)});sel.value='2H6';
+  const caps={'2H6':'The Jack Cade scenes, 4.2 to 4.10, are the ones Craig and Kinney assigned to Marlowe. Weighted by words they score P(Marlowe) 0.56 against 0.23 for the rest of the play. The character-model gap tells the same story: Marlowe costs less extra here (+0.22) than elsewhere (+0.24). Toggle verse-only to see the lean survive without prose.',
+    '1H6':'Act 1 is usually given to Nashe and 2.4 plus 4.2 to 4.7 to Shakespeare. A first pass looked as if it matched that pattern; the verse-only check removed it. We do not claim an ordering for Part 1.',
+    '3H6':'Part 3 as a whole scores P(Marlowe) 0.46, the most Marlovian of the three, but no scene group stands apart from the rest the way Cade does in Part 2.',
+    'R3':'Richard III scores 0.10 as Marlowe across the play. Nothing here resembles the Henry VI pattern.',
+    'Tit':'Titus scores 0.08 as Marlowe. Act 1, often given to Peele, scores 0.18 as Peele, too weak to confirm or deny.'};
+  function draw(){
+    const pid=sel.value;const sc=D.scenes[pid];const verse=$('#sc-verse').checked&&D.verse_only[names[pid]];const fade=$('#sc-small').checked;
+    $('#sc-verse-wrap').style.opacity=D.verse_only[names[pid]]?1:.4;$('#sc-verse').disabled=!D.verse_only[names[pid]];
+    const vo=verse?Object.fromEntries(D.verse_only[names[pid]].map(r=>[r.scene,r])):null;
+    const W=1060,H=300,m={l:40,r:16,t:30,b:50};const s=svgRoot(W,H,$('#sc-chart'));
+    const bw=(W-m.l-m.r)/sc.length;const y=v=>H-m.b-v*(H-m.t-m.b);
+    [0,.25,.5,.75,1].forEach(v=>{el('line',{x1:m.l,x2:W-m.r,y1:y(v),y2:y(v),stroke:v===0.5?'var(--ink-3)':'var(--paper-3)','stroke-dasharray':v===0.5?'3 3':''},s);el('text',{x:m.l-6,y:y(v)+4,'text-anchor':'end','font-size':11},s).textContent=v});
+    // prior shading
+    let run=null;sc.forEach((r,i)=>{const pr=r.prior||'';if(pr!==(run&&run.pr)){if(run&&run.pr){shade(run,i)}run={pr,start:i}}});if(run&&run.pr)shade(run,sc.length);
+    function shade(run,end){el('rect',{x:m.l+bw*run.start,y:m.t-10,width:bw*(end-run.start),height:H-m.t-m.b+10,fill:'var(--rubric-soft)',opacity:.7},s);const t=el('text',{x:m.l+bw*run.start+4,y:m.t,'font-size':11,fill:'var(--rubric)','font-weight':700},s);t.textContent=run.pr.replace('?',' (published)').replace(/^(Nashe|Shakespeare)$/,'$1 (published)')}
+    sc.forEach((r,i)=>{const v=verse?(vo[r.scene]?vo[r.scene].Pv:null):r.P.Marlowe;const words=verse?(vo[r.scene]?vo[r.scene].vwords:0):r.words;const cx=m.l+bw*i+bw/2;
+      if(v==null){el('text',{x:cx,y:y(0)-6,'text-anchor':'middle','font-size':10,fill:'var(--ink-3)'},s).textContent='–';}
+      else{const b=el('rect',{x:cx-Math.min(12,bw*0.35),y:y(v),width:Math.min(24,bw*0.7),height:y(0)-y(v),fill:'var(--ma)',opacity:(fade&&words<400)?.3:1,tabindex:0},s);
+        bind(b,`<b>Scene ${r.scene}</b> · ${words.toLocaleString()} ${verse?'verse ':''}words${r.prior?`<br>published attribution: ${esc(r.prior.replace('?',' (Craig & Kinney)'))}`:''}<br>P(Marlowe) ${fmt(v,2)}${verse?'':` · Shakespeare ${fmt(r.P.Shakespeare,2)} · Peele ${fmt(r.P.Peele,2)} · Greene ${fmt(r.P.Greene,2)}`}<br>ΔH(Marlowe) ${verse?(vo[r.scene].dHv>0?'+':'')+fmt(vo[r.scene].dHv,3):(r.dH.Marlowe>0?'+':'')+fmt(r.dH.Marlowe,3)} bits/char`)}
+      if(sc.length<=30||i%2===0)el('text',{x:cx,y:H-m.b+16,'text-anchor':'middle','font-size':10},s).textContent=r.scene});
+    el('text',{x:W/2,y:H-10,'text-anchor':'middle','font-size':11,fill:'var(--ink-3)'},s).textContent='scene (act.scene)';
+    el('text',{x:m.l,y:16,'font-size':11,fill:'var(--ink-3)'},s).textContent='P(Marlowe) among four candidates'+(verse?', verse only':'');
+    $('#sc-cap').textContent=caps[pid];
+  }
+  sel.onchange=draw;$('#sc-verse').onchange=draw;$('#sc-small').onchange=draw;draw();
+})();
+
+/* ---------- Perplexity table ---------- */
+(function(){
+  const P=D.ppl_ep;const models=['Marlowe_s1','ShEarlyNonH6','ShLater_s1','Greene','Peele','AnonHeroic'];const MN={Marlowe_s1:'Marlowe',ShEarlyNonH6:'Sh. early (no H6)',ShLater_s1:'Sh. later',Greene:'Greene',Peele:'Peele',AnonHeroic:'Anon. heroic'};
+  const trained={};models.forEach(m=>P.models[m].plays.forEach(p=>trained[m+'|'+p]=true));
+  const marloweAlt={Marlowe_A:P.models.Marlowe_A.plays,Marlowe_B:P.models.Marlowe_B.plays};
+  function val(m,p){if(m==='Marlowe_s1'&&P.bits.Marlowe_A&&P.models.Marlowe_s1.plays.includes(p)){return marloweAlt.Marlowe_A.includes(p)?P.bits.Marlowe_B[p]:P.bits.Marlowe_A[p]}if(trained[m+'|'+p])return null;return P.bits[m]?P.bits[m][p]:null}
+  function draw(){
+    const f=$('#ppl-filter').value;const ids=Object.keys(P.bits.Marlowe_s1).filter(id=>{const mt=D.ce_ep_meta[id]||byId[id];if(!mt)return false;if(f==='q')return mt.author==='Marlowe'||mt.group==='shakespeare_early';if(f==='ctrl')return mt.author!=='Marlowe'&&!mt.group.startsWith('shakespeare');return true});
+    const rows=ids.map(id=>{const mt=D.ce_ep_meta[id]||byId[id];const vs=models.map(m=>val(m,id));const best=Math.min(...vs.filter(v=>v!=null));
+      return `<tr><td>${esc(mt.title)}</td><td>${esc(mt.author)}</td>${vs.map((v,i)=>v==null?'<td class="num" style="color:var(--ink-3)">trained</td>':`<td class="num"><span class="cell" style="${v===best?'background:var(--ink);color:var(--paper);font-weight:700':''}">${v.toFixed(2)}${v===best?' ★':''}</span></td>`).join('')}</tr>`}).join('');
+    $('#ppl-table').innerHTML=`<table><thead><tr><th>play</th><th>author</th>${models.map(m=>`<th class="num">${MN[m]} model</th>`).join('')}</tr></thead><tbody>${rows}</tbody></table>`;
+  }
+  $('#ppl-filter').onchange=draw;draw();
+})();
+})();
+</script>
+</body>
+</html>
