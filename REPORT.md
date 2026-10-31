@@ -1,6 +1,6 @@
 # Are Marlowe's plays and early Shakespeare by the same hand? Report, version 2
 
-Date: 2026-10-30. Version 1 is kept at `results/REPORT_v1_2026-10-30.md`; the lab notebook
+Date: 2026-10-30, word-level section added 2026-10-31. Version 1 is kept at `results/REPORT_v1_2026-10-30.md`; the lab notebook
 (`NOTEBOOK.md`) records every step, bug and change of mind. All numbers are reproducible from the
 scripts (README.md).
 
@@ -33,6 +33,14 @@ and a second corpus in which every text comes from one editorial pipeline.
 4. **Comparing fine-tuned model weights, the original idea, does not work, and the controls show why.**
    A model's weight delta is 0.75-0.78 similar to itself under another random seed and 0.21-0.28
    similar to every other model, with same-author pairs no closer than different-author pairs.
+5. **Word-level tests (added 31 October) agree, and Burrows's Zeta fails the acceptance test.** Zeta marker
+   words separate Marlowe from non-Henry VI early Shakespeare (accuracy 0.79-0.85), but they also separate
+   Shakespeare's 1595-97 plays from his 1599-1611 plays (0.72-0.74), and they cannot separate Greene from
+   Peele (0.43-0.44) or Marlowe from Peele (0.49-0.54). The markers themselves show why: Marlowe's are the
+   vocabulary of heroic war (sword, field, crowns, triumph, martial), Shakespeare's the vocabulary of
+   comic conversation (indeed, very, marry, fool, honest). Zeta is a register and genre detector here,
+   and it sorts Greene, Peele and the anonymous heroic plays onto Marlowe's side as readily as it does
+   1 and 3 Henry VI.
 
 If one person had written both canons, Marlowe's hand should be visible across early Shakespeare,
 more visible there than in Greene and Peele, and visible in the comedies and in Richard III, not only
@@ -80,6 +88,8 @@ Spanish Tragedy + Soliman) are always held out together.
   12 random impostors per round.
 - Character 6-gram Witten-Bell models per author, size-matched, proper nouns masked; raw
   cross-entropy gaps and double-centred affinities.
+- Per-word rate comparison (Cohen's d over play-level rates) and Burrows's Zeta marker-word tests,
+  with Greene vs Peele as the acceptance test (`scripts/word_profiles.py`).
 - Scene-level four-way scan (Marlowe / Shakespeare / Peele / Greene) of 1-3 Henry VI, Titus,
   Richard III.
 - GPT-2 small fine-tuned per author with equal token budgets: held-out bits per token, and cosine
@@ -113,6 +123,52 @@ Spanish Tragedy + Soliman) are always held out together.
 | Peele | 0.52 / 0.52 | 0.20 / 0.23 | 0.19 / 0.16 | 0.67 / 0.66 | 0.43 / 0.41 |
 
 (Folger/EMED / EarlyPrint.)
+
+### Word profiles and Zeta (`results/words`, `results/ep/words`)
+
+**Which words differ.** For every pair of sets, each play's rate per 1,000 words of 1,084 words
+(190 function words plus every word present in at least 60% of plays, names masked) was compared
+across plays with Cohen's d. Marlowe vs non-Henry VI early Shakespeare: Marlowe uses *shall* (6.9 vs
+3.8 per 1,000), *whether*, *about*, *die*, *live*, *might*, *now* more; Shakespeare uses *you* (19.5 vs
+9.3), *her*, *say*, *very*, *indeed*, *marry*, *fool*, *patience*, *tongue* more. The Shakespeare side
+is largely the vocabulary of comic prose dialogue, and the Marlowe side that of declamatory verse, so
+the list describes genre as much as hand. The same analysis for Greene vs Peele finds words with large
+d (*fond*, *rest*, *brother*, *and*) that rest on four plays a side and should not be over-read.
+
+**Zeta.** Burrows's Zeta (2,000-word chunks, 150 marker words a side, candidate words in at least
+5 plays, names masked, markers chosen with the scored play and its family held out, chunks classified
+by nearest training centroid):
+
+| pair | type | Folger/EMED acc / AUC | EarlyPrint acc / AUC |
+|---|---|---|---|
+| Marlowe vs Shakespeare early, Henry VI excluded | question | 0.79 / 0.89 | 0.85 / 0.93 |
+| Marlowe vs Henry VI 1-3 | question | 0.65 / 0.64 | 0.58 / 0.63 |
+| Marlowe vs Shakespeare later | question | 0.92 / 0.98 | 0.94 / 0.98 |
+| Shakespeare early vs later | same author | 0.54 / 0.58 | 0.57 / 0.59 |
+| Shakespeare 1595-97 vs 1599-1611 | same author | 0.74 / 0.84 | 0.72 / 0.82 |
+| Marlowe 1587-89 vs 1589-93 | same author | 0.54 / 0.26 | 0.52 / 0.23 |
+| Greene vs Peele (acceptance test) | different, same register | 0.44 / 0.44 | 0.43 / 0.36 |
+| Marlowe vs Greene | different, same register | 0.76 / 0.86 | 0.69 / 0.62 |
+| Marlowe vs Peele | different, same register | 0.49 / 0.51 | 0.54 / 0.35 |
+| Marlowe vs anonymous heroic | different, same register | 0.70 / 0.77 | 0.57 / 0.48 |
+| Shakespeare early (non-H6) vs Greene; vs Peele | different | 0.82 / 0.93; 0.81 / 0.87 | 0.71 / 0.81; 0.80 / 0.76 |
+
+Zeta fails the acceptance test: it cannot tell Greene from Peele, and barely tells Marlowe from Peele
+or from the anonymous plays. It separates Marlowe from non-Henry VI early Shakespeare about as well as
+it separates two halves of Shakespeare's later career, so that result is period and genre, not
+evidence of a different hand on its own; it is consistent with the function-word tests but adds
+nothing to them. The marker lists make the mechanism plain: the Marlowe markers are *ye, pride, gold,
+walls, princely, war, unto, lives, land, soul, die, golden, yield, martial, wrath, brave, thousand,
+mighty, triumph, crowns, overthrow, sword, field, charge, slain, conquered*; the Shakespeare markers are
+*indeed, very, tongue, mad, reason, fool, business, hour, better, honest, beseech, true, dear, find,
+matter, patience, marry, merry, truth, together*.
+
+Projected onto Marlowe-vs-Shakespeare markers trained without the Henry VI family, 1 Henry VI
+(78% of chunks) and 3 Henry VI (64%) fall on Marlowe's side, 2 Henry VI (36%) and Richard III (8%) on
+Shakespeare's. But so do Alphonsus, Orlando, Alcazar, David, Locrine, Selimus and The Troublesome
+Reign (100% of chunks each): the Henry VI plays land where every other heroic play of 1587-92 lands.
+Note that in the pairs with Henry VI 1-3 as a set, each part is scored with its sibling parts in
+training, which flatters that set's cohesion; the projection above does not have that problem.
 
 ### Character models (`results/ep/crossentropy_masked`, `results/q/crossentropy_masked`)
 
@@ -212,8 +268,9 @@ same holds on the Folger/EMED corpus. The weight-delta cosines replicate on both
 
 ## Next steps that would add real information
 
-1. A method with demonstrated power inside the heroic register: word-adjacency networks (Segarra et
-   al. 2016) or Burrows's Zeta on the same corpus, with Greene vs Peele as the acceptance test.
+1. A method with demonstrated power inside the heroic register. Burrows's Zeta has now been tried and
+   fails the Greene-vs-Peele acceptance test (see above). Word-adjacency networks (Segarra et al. 2016)
+   remain untried; they are the published method that claims to split exactly this register.
 2. Early quartos of Titus (1594) and Richard III (1597) from EarlyPrint in place of the Folio text, to
    check that the Folio printing is not what separates them from Marlowe.
 3. Larger neural models, or longer fine-tuning, if the task-vector test below shows seed noise is

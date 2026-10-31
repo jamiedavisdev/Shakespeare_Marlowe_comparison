@@ -71,6 +71,20 @@ out['tv_ep']=dict(names=tve['names'],cosine=[[round(x,3) for x in row] for row i
 pp=json.load(open(P+'results/ep/finetune/perplexity.json'))
 out['ppl_ep']=pp
 
+# word profiles and Zeta
+def slim_zeta(z):
+    return dict(k=z['k'],min_plays=z['min_plays'],vocab=z['vocab'],
+        pairs=[dict(type=q['type'],A=q['A'],B=q['B'],playsA=q['playsA'],playsB=q['playsB'],chunks=q['chunks'],acc=q['acc'],auc=q['auc'],
+                    markersA=q['markersA'][:30],markersB=q['markersB'][:30],centroidA=q['centroidA'],centroidB=q['centroidB'],
+                    points=[dict(play=pt['play'],side=pt['side'],sA=pt['sA'],sB=pt['sB'],pred=pt['pred']) for pt in q['points']],per_play=q['per_play']) for q in z['pairs']],
+        projection=dict(A=z['projection']['A'],B=z['projection']['B'],markersA=z['projection']['markersA'][:40],markersB=z['projection']['markersB'][:40],
+                        centroidA=z['projection']['centroidA'],centroidB=z['projection']['centroidB'],points=z['projection']['points'],per_play=z['projection']['per_play']))
+def slim_prof(w):
+    return dict(vocab_size=w['vocab_size'],pairs=[dict(type=q['type'],A=q['A'],B=q['B'],playsA=q['playsA'],playsB=q['playsB'],topA=q['topA'][:20],topB=q['topB'][:20],per_play=q['per_play']) for q in w['pairs']])
+for corp,sub in (('main',''),('ep','ep/')):
+    zp=P+f'results/{sub}words/zeta.json'; wp=P+f'results/{sub}words/word_profiles.json'
+    if os.path.exists(zp): out['zeta' if corp=='main' else 'zeta_ep']=slim_zeta(json.load(open(zp)))
+    if os.path.exists(wp): out['words' if corp=='main' else 'words_ep']=slim_prof(json.load(open(wp)))
 # ---- links to sources and copies of texts / tables for the site ----
 import shutil
 SITE=os.path.dirname(os.path.abspath(__file__))
@@ -125,6 +139,10 @@ TABLES=[('results/gi_verify/gi_verify.md','Impostors verification, all plays (Fo
  ('results/ep/crossentropy_masked/quarto_check.md','Folio vs quarto check for Titus and Richard III','chars'),
  ('results/crossentropy_masked/edition_effect.md','Edition effect: same play, two editions','chars'),
  ('results/q/crossentropy_masked/crossentropy.md','Character-model cross-entropy (quarto corpus)','chars'),
+ ('results/words/word_profiles.md','Which words separate two sets of plays (Folger/EMED)','words'),
+ ('results/ep/words/word_profiles.md','Which words separate two sets of plays (all-EarlyPrint)','words'),
+ ('results/words/zeta.md','Burrows\'s Zeta: marker words, accuracies, Henry VI projection (Folger/EMED)','words'),
+ ('results/ep/words/zeta.md','Burrows\'s Zeta (all-EarlyPrint)','words'),
  ('results/scene_scan/scene_scan.md','Scene scan of 1-3 Henry VI, Titus, Richard III','scenes'),
  ('results/scene_scan/prose_verse.md','Verse-only and prose-only rescoring of Henry VI','scenes'),
  ('results/finetune/taskvectors.md','GPT-2 weight-delta cosines (Folger/EMED)','idea'),

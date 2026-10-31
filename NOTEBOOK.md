@@ -385,3 +385,45 @@ plays themselves, and the quarto corpus is too thin to repeat the neural run.
 Closing thought for the day: five methods, three corpora, and the same shape every time. Shakespeare
 outside Henry VI is not Marlowe. Henry VI and Marlowe both sit in a crowded room with Greene, Peele,
 Kyd and a dozen anonymous hands, and nothing here can tell those occupants apart.
+
+
+## Session 3 (2026-10-31): word-level tests
+
+**Prompt.** Jamie asked whether any word-frequency analysis had been done. The honest answer was: the
+function-word and MFW features *are* word frequencies, but no per-word comparison had ever been
+reported, and Zeta sat in "next steps". Both are now implemented in `scripts/word_profiles.py`, run on
+the main and EP corpora, and shown on the site.
+
+**Step 13: per-word profiles.** 190 function words plus every word present in >= 60% of plays, names
+masked, rates per 1,000 words per play, ranked by Cohen's d across plays. The Marlowe-vs-early-Shakespeare
+list is readable at a glance: Marlowe has *shall, whether, about, die, live, might, now*; Shakespeare has
+*you, her, say, very, indeed, marry, fool, patience, tongue*. The second list is comic prose. I had
+expected function words to dominate the top of a d-ranked list and they do, but content words from the
+60%-presence set are right behind them.
+
+**Step 14: Zeta.** Implemented per Burrows 2007 with the Craig/Kinney scoring (share of A-markers vs
+share of B-markers per chunk, nearest centroid). Three bugs in sequence:
+
+1. Sets consisting of one plot family (Henry VI 1-3) could never be scored: holding out one part removed
+   all three from training. Fixed by holding out only the play on its own side when the family rule would
+   empty the side, and recording in the report that this flatters Henry VI's cohesion.
+2. *tamburlaine* appeared as a Marlowe marker. The EMED regulariser lower-cases the name in about half its
+   occurrences, so the per-play capitalisation rule (>= 90%) missed it. Added a corpus-wide pooled rule
+   (>= 60% capitalised over >= 5 uses). 1,691 name-like words are now masked.
+3. *s* appeared as a Shakespeare marker: the Folger editions print "in 's" for "in his", and the
+   tokeniser produced a bare *s*. Single-letter tokens other than a/I/O are now dropped. This artefact
+   does not touch the function-word results (no single-letter feature) and the MFW runs replicate on the
+   EP corpus, which has no such tokens, so I did not rerun them.
+
+**Result.** Zeta fails the acceptance test. Greene vs Peele 0.44 / 0.43 (main / EP), Marlowe vs Peele
+0.49 / 0.54, Marlowe vs anonymous heroic 0.70 / 0.57. It does separate Marlowe from non-Henry VI early
+Shakespeare (0.79 / 0.85), but it separates Shakespeare 1595-97 from 1599-1611 almost as well
+(0.74 / 0.72), and the marker lists are transparently genre vocabulary (war words vs conversation words).
+Projected onto Marlowe-vs-Shakespeare markers, 1 and 3 Henry VI fall on Marlowe's side, and so does
+every Greene, Peele and anonymous heroic play. Same conclusion as every other method, with the mechanism
+now visible word by word.
+
+**Thought.** This closes the "try Zeta" item honestly: it was the method most likely to split the
+register, and it does not. Word-adjacency networks are the remaining published candidate. The per-word
+tables are probably the most useful thing on the site for a non-specialist reader, because they turn
+"Marlowe-like" into a list of words one can check against a page of text.

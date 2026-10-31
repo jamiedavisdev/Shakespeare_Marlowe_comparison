@@ -64,3 +64,14 @@ CORPUS=ep .venv/bin/python scripts/build_corpus.py && CORPUS=ep .venv/bin/python
 EarlyPrint raw files: `https://bitbucket.org/eads004/<first 3 chars of TCP id>/raw/master/<TCP id>.xml`.
 
 Raw downloads (data/raw) are re-fetched with the curl commands recorded in REPORT.md if missing.
+
+## Word-level tests (added 2026-10-31)
+
+```
+.venv/bin/python scripts/word_profiles.py            # results/words/{word_profiles,zeta}.{md,json}
+CORPUS=ep .venv/bin/python scripts/word_profiles.py  # results/ep/words/
+```
+
+Per-word rate comparisons (Cohen's d over plays) for every benchmark pair, and Burrows's Zeta
+marker-word tests with leave-one-play-out scoring and a Marlowe-vs-Shakespeare projection of the
+Henry VI plays and the register controls. Runs in a couple of seconds.
