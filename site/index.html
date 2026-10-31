@@ -105,9 +105,18 @@ details p{font-size:17px}
 .flow .step{background:var(--paper-2);padding:12px 14px;font-family:var(--ui);font-size:14px;line-height:1.4;min-width:0}
 .flow .step b{display:block;font-size:15px;margin-bottom:4px}
 .kbd{font-family:var(--ui);font-size:13px;background:var(--paper-3);padding:1px 6px;border-radius:4px}
-.toc{display:flex;flex-wrap:wrap;gap:6px 14px;font-family:var(--ui);font-size:14px}
-.toc a{color:var(--ink-2);text-decoration:none;border-bottom:1px solid var(--rule)}
-.toc a:hover{color:var(--rubric);border-color:var(--rubric)}
+/* section bar: sits under the hero and sticks to the top of the viewport while the page scrolls.
+   Full-bleed (undoes the body gutter), one row that scrolls sideways on narrow screens, current section underlined. */
+.toc{position:sticky;top:env(safe-area-inset-top,0px);z-index:25;overflow-x:auto;scrollbar-width:none;
+  margin-inline:calc(-1 * max(16px,env(safe-area-inset-left,0px))) calc(-1 * max(16px,env(safe-area-inset-right,0px)));
+  background:color-mix(in oklab,var(--paper) 94%,transparent);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
+  border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);font-family:var(--ui);font-size:14px}
+.toc::-webkit-scrollbar{display:none}
+.toc .in{display:flex;gap:0 18px;width:max-content;margin:0 auto;padding:0 max(16px,env(safe-area-inset-left,0px)) 0 max(16px,env(safe-area-inset-left,0px))}
+.toc a{flex:0 0 auto;color:var(--ink-2);text-decoration:none;white-space:nowrap;padding:11px 0 8px;border-bottom:2px solid transparent;margin-bottom:-1px}
+.toc a:hover{color:var(--rubric)}
+.toc a.on{color:var(--ink);border-color:var(--rubric)}
+section{scroll-margin-top:56px}
 .nowrap{white-space:nowrap}
 .bars-row{display:grid;grid-template-columns:1fr;gap:4px}
 .cmp{display:grid;grid-template-columns:1fr 1fr;gap:16px}
@@ -184,11 +193,12 @@ details p{font-size:17px}
       <div class="v"><div class="k">0.27 = 0.27</div><div class="l">Our first plan was to train a language model on each author and compare their weights. Two models trained on the <em>same</em> author came out no more alike (0.27) than two trained on <em>different</em> authors (0.27), so that method cannot answer the question.</div></div>
     </div>
     <p class="small">Short answer: the measurements do not support one author. Marlowe's style does live on in one place, the <i>Henry VI</i> plays, but there it is shared by half a dozen other writers of 1587 to 1592. Scroll for the ideas, the methods, and every result, with controls you can play with.</p>
-    <nav class="toc" aria-label="Sections">
-      <a href="#question">The question</a><a href="#idea">The original idea</a><a href="#method">How we tested</a><a href="#map">Map of the plays</a><a href="#verify">Verification</a><a href="#classify">Classifiers</a><a href="#words">Words</a><a href="#chars">Character models</a><a href="#scenes">Scene by scene</a><a href="#neural">Neural models</a><a href="#honest">What went wrong</a><a href="#texts">Texts and data</a><a href="#glossary">Glossary</a>
-    </nav>
   </div>
 </header>
+
+<nav class="toc" aria-label="Sections"><div class="in">
+  <a href="#question">The question</a><a href="#idea">The original idea</a><a href="#method">How we tested</a><a href="#map">Map of the plays</a><a href="#verify">Verification</a><a href="#classify">Classifiers</a><a href="#words">Words</a><a href="#chars">Character models</a><a href="#scenes">Scene by scene</a><a href="#neural">Neural models</a><a href="#honest">What went wrong</a><a href="#texts">Texts and data</a><a href="#glossary">Glossary</a>
+</div></nav>
 
 <section id="question">
   <div class="col">
@@ -504,6 +514,14 @@ details p{font-size:17px}
 <script>
 (async function(){
 const $=s=>document.querySelector(s);
+/* section bar: underline the section nearest the top, and keep that link in view when the bar scrolls sideways */
+(function(){const bar=$('.toc');if(!bar)return;const links=[...bar.querySelectorAll('a[href^="#"]')];const secs=links.map(a=>document.getElementById(a.getAttribute('href').slice(1))).filter(Boolean);let prev=null;
+  function spy(){const line=bar.getBoundingClientRect().bottom+12;let cur=secs[0];for(const sc of secs){if(sc.getBoundingClientRect().top<=line)cur=sc;else break}
+    if(innerHeight+scrollY>=document.documentElement.scrollHeight-2)cur=secs[secs.length-1];
+    if(cur===prev)return;prev=cur;let on=null;
+    links.forEach(a=>{const hit=a.getAttribute('href')==='#'+cur.id;a.classList.toggle('on',hit);if(hit){a.setAttribute('aria-current','true');on=a}else a.removeAttribute('aria-current')});
+    if(on){const r=on.getBoundingClientRect(),b=bar.getBoundingClientRect();if(r.left<b.left+8||r.right>b.right-8)bar.scrollTo({left:on.offsetLeft-(b.width-r.width)/2,behavior:'smooth'})}}
+  addEventListener('scroll',spy,{passive:true});addEventListener('resize',spy);spy()})();
 const tip=$('#tip');
 function showTip(e,html){tip.innerHTML=html;tip.classList.add('on');moveTip(e)}
 function moveTip(e){const w=tip.offsetWidth,h=tip.offsetHeight;let x=e.clientX+14,y=e.clientY+14;if(x+w>innerWidth-8)x=e.clientX-w-14;if(y+h>innerHeight-8)y=e.clientY-h-14;tip.style.left=x+'px';tip.style.top=y+'px'}
