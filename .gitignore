@@ -4,8 +4,6 @@ __pycache__/
 *.pyc
 .DS_Store
 
-# raw downloads (~260 MB; re-fetchable, see README.md)
-data/raw/
 
 # model checkpoints, if any are saved
 *.safetensors
