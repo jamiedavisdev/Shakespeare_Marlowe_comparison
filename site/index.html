@@ -114,6 +114,38 @@ details p{font-size:17px}
 .quote span{display:block;font-style:normal;font-family:var(--ui);font-size:14px;color:var(--ink-3);margin-top:6px}
 @media (prefers-reduced-motion: reduce){*{transition:none!important}}
 .pending{font-family:var(--ui);color:var(--ink-3);padding:30px;text-align:center}
+/* play detail drawer */
+.panel{position:fixed;top:env(safe-area-inset-top,0px);right:0;bottom:0;width:min(440px,100vw);background:var(--paper);border-left:1px solid var(--rule);box-shadow:-12px 0 30px rgba(0,0,0,.18);z-index:30;overflow-y:auto;padding:22px max(20px,env(safe-area-inset-right,0px)) 32px 22px;font-family:var(--ui);font-size:15px;line-height:1.45}
+.panel .close{position:absolute;top:12px;right:14px;font:inherit;font-size:22px;line-height:1;background:var(--paper-2);color:var(--ink);border:1px solid var(--rule);border-radius:50%;width:34px;height:34px;cursor:pointer}
+.panel h3{font-size:26px;margin:4px 40px 2px 0}
+.panel .meta{color:var(--ink-2);margin-bottom:12px}
+.panel h4{font-family:var(--ui);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--rubric);margin:18px 0 6px}
+.panel ul{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.panel li{display:flex;gap:8px;align-items:baseline}
+.panel li .pill{display:inline-block;font-size:11px;letter-spacing:.05em;text-transform:uppercase;padding:1px 6px;border-radius:4px;background:var(--paper-3);color:var(--ink-2);white-space:nowrap}
+.panel a{color:var(--rubric);text-decoration:none;border-bottom:1px solid var(--rubric-soft)}
+.panel a:hover{border-color:var(--rubric)}
+.panel .scores{display:grid;grid-template-columns:repeat(auto-fit,minmax(90px,1fr));gap:8px}
+.panel .scores div{background:var(--paper-2);padding:8px 10px}
+.panel .scores b{display:block;font-family:var(--display);font-size:22px;font-weight:600;color:var(--ink)}
+.panel .scores span{font-size:12px;color:var(--ink-2)}
+.panel .note{font-size:14px;margin-top:10px}
+.panel .ex{font-size:13px;color:var(--ink-3)}
+.datalink{font-family:var(--ui);font-size:13px;color:var(--ink-3);margin:8px 0 0}
+.datalink a{color:var(--ink-2);text-decoration:none;border-bottom:1px solid var(--rule)}
+.datalink a:hover{color:var(--rubric);border-color:var(--rubric)}
+.linkbtn{font:inherit;font-family:var(--ui);font-size:13px;background:transparent;color:var(--rubric);border:1px solid var(--rubric);border-radius:6px;padding:3px 10px;cursor:pointer}
+.linkbtn:hover{background:var(--rubric-soft)}
+.texts-table td a{color:var(--rubric);text-decoration:none}
+.texts-table td a:hover{text-decoration:underline}
+.texts-table td.t{white-space:normal;min-width:180px}
+.texts-table td.l{white-space:normal}
+.texts-table tr{cursor:pointer}
+.texts-table tr:hover td{background:var(--paper-2)}
+.dl{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:8px 18px;font-family:var(--ui);font-size:15px}
+.dl a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--rule)}
+.dl a:hover{color:var(--rubric);border-color:var(--rubric)}
+.dl .grp{grid-column:1/-1;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--rubric);margin-top:10px}
 </style>
 </head>
 <body>
@@ -130,7 +162,7 @@ details p{font-size:17px}
     </div>
     <p class="small">Short answer: the measurements do not support one author. Marlowe's style does live on in one place, the <i>Henry VI</i> plays, but there it is shared by half a dozen other writers of 1587 to 1592. Scroll for the ideas, the methods, and every result, with controls you can play with.</p>
     <nav class="toc" aria-label="Sections">
-      <a href="#question">The question</a><a href="#idea">The original idea</a><a href="#method">How we tested</a><a href="#map">Map of the plays</a><a href="#verify">Verification</a><a href="#classify">Classifiers</a><a href="#chars">Character models</a><a href="#scenes">Scene by scene</a><a href="#neural">Neural models</a><a href="#honest">What went wrong</a><a href="#glossary">Glossary</a>
+      <a href="#question">The question</a><a href="#idea">The original idea</a><a href="#method">How we tested</a><a href="#map">Map of the plays</a><a href="#verify">Verification</a><a href="#classify">Classifiers</a><a href="#chars">Character models</a><a href="#scenes">Scene by scene</a><a href="#neural">Neural models</a><a href="#honest">What went wrong</a><a href="#texts">Texts and data</a><a href="#glossary">Glossary</a>
     </nav>
   </div>
 </header>
@@ -144,7 +176,7 @@ details p{font-size:17px}
   </div>
   <div class="wide plate" id="timeline-plate">
     <p class="ttl">The plays in our corpus, by year</p>
-    <p class="sub">Each mark is one play. Hover for the title. Marlowe died in 1593; the shaded band is the "heroic register" window, 1587 to 1592.</p>
+    <p class="sub">Each mark is one play. Hover for the title, click for its sources, texts and scores. Marlowe died in 1593; the shaded band is the "heroic register" window, 1587 to 1592.</p>
     <div class="legend" id="timeline-legend"></div>
     <div id="timeline"></div>
     <p class="cap">Dates are the usual scholarly estimates of first performance. Shakespeare's plays are split at 1594: "early" is the set the theory needs to match, "later" is a same-author control. Greene, Peele and eight anonymous heroic plays are the "same register, different author" controls.</p>
@@ -164,7 +196,7 @@ details p{font-size:17px}
       <div class="step"><b>4 · Compare with controls</b>Cosine similarity between the differences, including same-text/new-seed and same-author/other-plays pairs.</div>
     </div>
   </div>
-  <div class="wide plate">
+  <div class="wide plate" data-sec="idea">
     <p class="ttl">How similar are the weight changes?</p>
     <p class="sub">Cosine similarity between fine-tuning deltas. Hover a cell. Rows and columns are the thirteen models.</p>
     <div class="controls">
@@ -207,7 +239,7 @@ details p{font-size:17px}
     <h2>Fifty-six plays on one sheet</h2>
     <p>Here every play is placed so that plays with similar function-word habits sit close together. Two dimensions keep about a third of the full distance information, so treat it as a sketch and use the neighbour list for the exact figures.</p>
   </div>
-  <div class="wide plate">
+  <div class="wide plate" data-sec="map">
     <p class="ttl">Function-word similarity map</p>
     <p class="sub">Classical multidimensional scaling of cosine-delta distances. Click a play to see its ten nearest neighbours. Shape and colour both mark the author.</p>
     <div class="controls" id="map-controls"></div>
@@ -225,7 +257,7 @@ details p{font-size:17px}
     <h2>Could this play be by Marlowe?</h2>
     <p>The impostors method asks a yes-or-no question per play. In each of 200 rounds it draws a random half of the features and twelve random "impostor" plays, then checks whether the target is nearer to some play by the candidate than to every impostor. The score is the share of rounds that say yes. A play by a known author should score high in its own column and low elsewhere, and the known authors tell us what "high" means here.</p>
   </div>
-  <div class="wide plate">
+  <div class="wide plate" data-sec="verify">
     <p class="ttl">Verification scores by candidate author</p>
     <p class="sub">Pick a group of target plays. Bars show the mean score as each candidate; dots are the individual plays.</p>
     <div class="controls">
@@ -236,9 +268,9 @@ details p{font-size:17px}
     <div id="gi-chart"></div>
     <p class="cap" id="gi-cap"></p>
   </div>
-  <div class="wide plate">
+  <div class="wide plate" data-sec="verify">
     <p class="ttl">Every play, every candidate</p>
-    <p class="sub">Darker means a higher score. Rows are target plays; the five columns are the candidate authors.</p>
+    <p class="sub">Darker means a higher score. Rows are target plays; the five columns are the candidate authors. Click a row for the play's sources and texts.</p>
     <div class="scrollx" id="gi-table"></div>
   </div>
   <div class="col">
@@ -252,7 +284,7 @@ details p{font-size:17px}
     <h2>Can a machine tell them apart?</h2>
     <p>A classifier is trained on 2,000-word chunks from two sets of plays, then tested on a play it has never seen. If two sets are by one writer the accuracy should hover near coin-flip, 0.5. If they are by different writers it should climb toward 1. The benchmark pairs tell us where "near 0.5" and "near 1" fall for plays of this period and size.</p>
   </div>
-  <div class="wide plate">
+  <div class="wide plate" data-sec="classify">
     <p class="ttl">Leave-one-play-out accuracy, function words</p>
     <p class="sub">Sorted by accuracy. Colour marks the kind of pair. Hover for AUC and chunk counts.</p>
     <div class="controls">
@@ -271,7 +303,7 @@ details p{font-size:17px}
     <p>A character model learns how six-letter sequences follow one another in an author's text. Ask it to predict a new play and it needs a certain number of bits per character; the fewer, the more the play "sounds like" the training author. We trained one model per author on equal amounts of text, with all proper names masked so that <i>Tamburlaine</i> does not give itself away.</p>
     <p>This was where our first report went wrong. On the mixed-edition corpus the Marlowe model recognised Marlowe's plays, and we said so. Then we measured what happens when the <em>same play</em> is swapped for another edition: the cost moved by 0.04 to 0.07 bits per character, the same size as the author effect. On the single-source corpus the recognition vanished.</p>
   </div>
-  <div class="wide plate">
+  <div class="wide plate" data-sec="chars">
     <p class="ttl">Which author's model predicts each play best?</p>
     <p class="sub">All-EarlyPrint corpus, names masked. Bars show the extra cost under each model relative to the best model for that play (0 = best). Plays are never scored by a model that trained on them.</p>
     <div class="controls">
@@ -281,7 +313,7 @@ details p{font-size:17px}
     <div id="ce-chart"></div>
     <p class="cap" id="ce-cap"></p>
   </div>
-  <div class="wide plate">
+  <div class="wide plate" data-sec="chars">
     <p class="ttl">The Marlowe gap, play by play</p>
     <p class="sub">Cost under the Marlowe model minus cost under the later-Shakespeare model, bits per character. Left of zero: the Marlowe model predicts the play better. Hover for values.</p>
     <div class="controls">
@@ -298,7 +330,7 @@ details p{font-size:17px}
     <h2>Inside <i>Henry VI</i></h2>
     <p>Scholars have long suspected the <i>Henry VI</i> plays are collaborations. The 2016 New Oxford Shakespeare credits Marlowe as co-author of all three. Craig and Kinney found Marlowe's hand specifically in the Jack Cade rebellion scenes of Part 2. We scored every scene with two scorers trained on four authors, with the scanned play's whole family held out of training.</p>
   </div>
-  <div class="wide plate">
+  <div class="wide plate" data-sec="scenes">
     <p class="ttl">Scene-level probability of Marlowe</p>
     <p class="sub">Function-word classifier, four candidates: Marlowe, Shakespeare, Peele, Greene. Bar height is P(Marlowe); hover for the full split. Shaded scenes carry a published attribution.</p>
     <div class="controls">
@@ -320,7 +352,7 @@ details p{font-size:17px}
     <h2>What the fine-tuned models predict</h2>
     <p>The weight comparison failed, but the same thirteen GPT-2 models can be judged on behaviour: how many bits per token does each need to predict a held-out play? This is the neural version of the character-model test, run on the single-source corpus so no edition effect intrudes.</p>
   </div>
-  <div class="wide plate">
+  <div class="wide plate" data-sec="neural">
     <p class="ttl">Best-predicting model for each play</p>
     <p class="sub">All-EarlyPrint corpus. Cells show bits per token; the best model in each row is marked. Plays are never scored by a model that trained on them (blank cells). Marlowe plays are scored by the Marlowe model trained on the other half of his canon.</p>
     <div class="controls"><label for="ppl-filter">Show</label><select id="ppl-filter"><option value="all">all plays</option><option value="q" selected>Marlowe and early Shakespeare</option><option value="ctrl">controls</option></select></div>
@@ -350,6 +382,28 @@ details p{font-size:17px}
   </div>
 </section>
 
+<section id="texts">
+  <div class="col">
+    <div class="eyebrow">XI · Texts and data</div>
+    <h2>Read the plays, open the tables</h2>
+    <p>Every play below links to the edition we started from (Folger, Folger EMED, or EarlyPrint's EEBO-TCP transcription), to the early printing where one exists, and to the exact dialogue-only text our scripts analysed. Click a row for the play's full card. The result tables underneath are the files the charts were drawn from.</p>
+  </div>
+  <div class="wide plate">
+    <p class="ttl">The 56 plays</p>
+    <div class="controls">
+      <label for="tx-filter">Show</label>
+      <select id="tx-filter"><option value="all">all plays</option><option value="Marlowe">Marlowe</option><option value="Shakespeare">Shakespeare</option><option value="ctrl">controls</option></select>
+      <span class="small">"Our text" opens the cleaned dialogue in a new tab: Folger/EMED corpus, all-EarlyPrint corpus (Folio for Shakespeare), quarto corpus.</span>
+    </div>
+    <div class="scrollx" id="tx-table"></div>
+  </div>
+  <div class="wide plate">
+    <p class="ttl">Result tables and documents</p>
+    <p class="sub">Plain-text files, opened in a new tab.</p>
+    <div class="dl" id="tables-list"></div>
+  </div>
+</section>
+
 <section id="glossary">
   <div class="col">
     <div class="eyebrow">XI · Glossary</div>
@@ -368,6 +422,10 @@ details p{font-size:17px}
 </section>
 
 <div class="tip" id="tip" role="status" aria-live="polite"></div>
+<aside id="panel" class="panel" hidden aria-label="Play details" role="dialog" aria-modal="false">
+  <button class="close" id="panel-close" aria-label="Close">×</button>
+  <div id="panel-body"></div>
+</aside>
 
 <script>
 (async function(){
@@ -392,6 +450,31 @@ function cat(p){if(p.author==='Marlowe')return 'Marlowe';if(p.group==='shakespea
 const H6=new Set(['1H6','2H6','3H6']);
 const NONH6=['Tit','R3','Shr','TGV','Err'];
 const title=id=>byId[id]?byId[id].title:(D.ce_ep_meta[id]?D.ce_ep_meta[id].title:id);
+const CATNAME={Marlowe:'Marlowe',Shakespeare:'Shakespeare, to 1594','Shakespeare later':'Shakespeare, 1595 on',Greene:'Greene',Peele:'Peele','Anon heroic':'Anonymous heroic play',Other:'Control'};
+const CEN={Marlowe:'Marlowe','Sh-early':'Shakespeare early','Sh-later':'Shakespeare later',Greene:'Greene',Peele:'Peele','Anon-heroic':'Anonymous heroic'};
+const panel=$('#panel'),pbody=$('#panel-body');
+function closePanel(){panel.hidden=true}
+$('#panel-close').onclick=closePanel;document.addEventListener('keydown',e=>{if(e.key==='Escape')closePanel()});
+function openPanel(id){
+  const p=byId[id];if(!p)return;const L=D.links[id]||{links:[],texts:{}};const c=cat(p);
+  const gi=D.gi[id]||{};const giTop=Object.entries(gi).filter(([k])=>k!=='Fletcher').sort((a,b)=>b[1]-a[1]).slice(0,3);
+  const ce=D.ce_ep[id];let ceBest=null;if(ce){const e=Object.entries(ce).filter(([k,v])=>v!=null).sort((a,b)=>a[1]-b[1]);if(e.length)ceBest=e[0]}
+  const nb=D.dist[id]?Object.entries(D.dist[id]).filter(([k])=>k!==id&&byId[k]).sort((a,b)=>a[1]-b[1]).slice(0,3):[];
+  const srcLabel={folger:'Folger Shakespeare edition (modern spelling)',emed:'Folger EMED transcription, regularised spelling',earlyprint:'EarlyPrint / EEBO-TCP, regularised spelling'}[L.source]||'';
+  const tx=[['main','Folger / EMED corpus'],['ep','All-EarlyPrint corpus'],['q','Quarto corpus']].filter(([k])=>L.texts[k]);
+  pbody.innerHTML=`<h3>${esc(p.title)}</h3><div class="meta"><span class="sw" style="background:${COL[c]}"></span>${esc(p.author)} · ${p.date} · ${esc(CATNAME[c])}${p.words?` · ${p.words.toLocaleString()} words of dialogue`:''}</div>
+  ${L.note?`<p class="note">${esc(L.note)}</p>`:''}
+  <h4>Where the text comes from</h4><p class="ex">${esc(srcLabel)}</p>
+  <ul>${L.links.map(l=>`<li><span class="pill">${l.kind==='early'?'early print':'source'}</span><a href="${l.url}" target="_blank" rel="noopener">${esc(l.label)}</a></li>`).join('')}</ul>
+  <h4>The text we analysed</h4><ul>${tx.map(([k,lab])=>`<li><span class="pill">our text</span><a href="${L.texts[k]}" target="_blank" rel="noopener">${lab}</a></li>`).join('')}</ul>
+  <p class="ex">Dialogue only: speaker labels and stage directions removed, spelling as in the source edition, lower-cased for analysis.</p>
+  <h4>Scores for this play</h4>
+  <div class="scores">${giTop.map(([k,v])=>`<div><b>${fmt(v,2)}</b><span>verifies as ${esc(k==='Anon-heroic'?'anon. heroic':k)}</span></div>`).join('')}${ceBest?`<div><b>${esc(CEN[ceBest[0]])}</b><span>best character model (${ceBest[1].toFixed(3)} bits/char)</span></div>`:''}</div>
+  ${nb.length?`<h4>Nearest by function words</h4><ul>${nb.map(([k,v])=>`<li><span class="pill">${fmt(v,2)}</span><a href="#" data-open="${k}">${esc(byId[k].title)}</a> <span class="ex">${esc(byId[k].author)}</span></li>`).join('')}</ul>`:''}
+  <h4>Full tables</h4><p class="ex"><a href="${(D.tables.find(t=>t.section==='verify')||{}).path}" target="_blank" rel="noopener">verification scores</a> · <a href="${(D.tables.find(t=>t.section==='chars')||{}).path}" target="_blank" rel="noopener">character models</a> · <a href="${(D.tables.find(t=>t.section==='map')||{}).path}" target="_blank" rel="noopener">distances</a></p>`;
+  pbody.querySelectorAll('a[data-open]').forEach(a=>a.onclick=e=>{e.preventDefault();openPanel(a.dataset.open)});
+  panel.hidden=false;panel.scrollTop=0;$('#panel-close').focus();
+}
 function mark(parent,cat,x,y,r,extra){ // shape per author
   const a=Object.assign({fill:COL[cat],stroke:'var(--surface)','stroke-width':2},extra||{});
   if(cat==='Marlowe')return el('path',Object.assign({d:`M${x} ${y-r*1.3}L${x+r*1.3} ${y}L${x} ${y+r*1.3}L${x-r*1.3} ${y}Z`},a),parent);
@@ -422,7 +505,8 @@ function legendHTML(cats){return cats.map(c=>`<span><i style="background:${COL[c
   const stack={};
   plays.slice().sort((a,b)=>a.date-b.date).forEach(p=>{const c=cat(p);const k=lanes[c]+'-'+p.date;stack[k]=(stack[k]||0)+1;const cx=x(+p.date),cy=m.t+laneH*lanes[c]+laneH/2+((stack[k]-1)%3-1)*9;
     const g=el('g',{tabindex:0,style:'cursor:default'},s);mark(g,c,cx,cy,6);
-    bind(g,`<b>${esc(p.title)}</b><br>${esc(p.author)}, ${p.date}${p.words?`<br>${p.words.toLocaleString()} words of dialogue`:''}`)});
+    g.style.cursor='pointer';g.onclick=()=>openPanel(p.id);g.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){openPanel(p.id);e.preventDefault()}};
+    bind(g,`<b>${esc(p.title)}</b><br>${esc(p.author)}, ${p.date}${p.words?`<br>${p.words.toLocaleString()} words of dialogue`:''}<br><span style="opacity:.8">click for sources and texts</span>`)});
   $('#timeline-legend').innerHTML=legendHTML(['Marlowe','Shakespeare','Shakespeare later','Greene','Peele','Anon heroic','Other']);
 })();
 
@@ -489,6 +573,7 @@ $('#tv-ep').onclick=()=>{drawTV('ep');$('#tv-ep').setAttribute('aria-pressed','t
     const p=byId[sel];
     el('text',{x:0,y:16,'font-size':14,'font-weight':700,fill:'var(--ink)'},s).textContent=`Nearest to ${p.title.slice(0,34)}`;
     el('text',{x:0,y:34,'font-size':12,fill:'var(--ink-2)'},s).textContent=`${p.author}, ${p.date} · cosine delta, smaller = closer`;
+    const fo=el('foreignObject',{x:W-120,y:0,width:120,height:30},s);const bt=document.createElement('button');bt.className='linkbtn';bt.textContent='Sources & text';bt.onclick=()=>openPanel(sel);fo.appendChild(bt);
     const maxd=1.2;const x=v=>200+Math.min(v,maxd)/maxd*(W-230);
     nb.forEach(([k,v],i)=>{const y=46+rh*i;const q=byId[k];const c=cat(q);
       const t=el('text',{x:194,y:y+15,'text-anchor':'end','font-size':12,fill:'var(--ink-2)'},s);t.textContent=q.title.replace(/^(The|A) /,'').slice(0,26);
@@ -539,8 +624,9 @@ $('#tv-ep').onclick=()=>{drawTV('ep');$('#tv-ep').setAttribute('aria-pressed','t
     const ids=Object.keys(G).filter(id=>byId[id]||D.ce_ep_meta[id]);
     const col=v=>`background:color-mix(in oklab, var(--paper-2), var(--sh) ${Math.round(v*85)}%);color:${v>0.55?'#fff':'var(--ink)'}`;
     const auth=id=>byId[id]?byId[id].author:D.ce_ep_meta[id].author;
-    const rows=ids.map(id=>`<tr><td>${esc(title(id))}</td><td>${esc(auth(id))}</td>${CANDS.map(c=>`<td class="num"><span class="cell" style="${col(G[id][c]||0)}">${fmt(G[id][c],2)}</span></td>`).join('')}</tr>`).join('');
+    const rows=ids.map(id=>`<tr data-id="${id}" style="cursor:pointer"><td>${esc(title(id))}</td><td>${esc(auth(id))}</td>${CANDS.map(c=>`<td class="num"><span class="cell" style="${col(G[id][c]||0)}">${fmt(G[id][c],2)}</span></td>`).join('')}</tr>`).join('');
     $('#gi-table').innerHTML=`<table><thead><tr><th>play</th><th>author</th>${CANDS.map(c=>`<th class="num">as ${c}</th>`).join('')}</tr></thead><tbody>${rows}</tbody></table>`;
+    $('#gi-table').querySelectorAll('tr[data-id]').forEach(tr=>tr.onclick=()=>{if(byId[tr.dataset.id])openPanel(tr.dataset.id)});
   }
   sel.onchange=draw;
   $('#gi-main').onclick=()=>{corpus='main';$('#gi-main').setAttribute('aria-pressed','true');$('#gi-ep').setAttribute('aria-pressed','false');draw()};
@@ -655,6 +741,26 @@ $('#tv-ep').onclick=()=>{drawTV('ep');$('#tv-ep').setAttribute('aria-pressed','t
     $('#ppl-table').innerHTML=`<table><thead><tr><th>play</th><th>author</th>${models.map(m=>`<th class="num">${MN[m]} model</th>`).join('')}</tr></thead><tbody>${rows}</tbody></table>`;
   }
   $('#ppl-filter').onchange=draw;draw();
+})();
+
+/* ---------- Texts and data ---------- */
+(function(){
+  function draw(){
+    const f=$('#tx-filter').value;const ids=plays.filter(p=>f==='all'||(f==='Marlowe'&&p.author==='Marlowe')||(f==='Shakespeare'&&p.author==='Shakespeare')||(f==='ctrl'&&p.author!=='Marlowe'&&p.author!=='Shakespeare')).map(p=>p.id);
+    const rows=ids.map(id=>{const p=byId[id],L=D.links[id]||{links:[],texts:{}};const c=cat(p);
+      const src=L.links.filter(l=>l.kind==='source').map(l=>`<a href="${l.url}" target="_blank" rel="noopener">${esc(l.label.replace(/,.*$/,'').replace(' / EEBO-TCP',''))}</a>`).join(' · ');
+      const early=L.links.filter(l=>l.kind==='early').map(l=>`<a href="${l.url}" target="_blank" rel="noopener">${esc(l.label.replace(/,? ?EarlyPrint.*$/,'').replace(/ \(TCP.*$/,''))}</a>`).join(' · ');
+      const tx=[['main','Folger/EMED'],['ep','EarlyPrint'],['q','quarto']].filter(([k])=>L.texts[k]).map(([k,l])=>`<a href="${L.texts[k]}" target="_blank" rel="noopener">${l}</a>`).join(' · ');
+      return `<tr data-id="${id}"><td class="t"><span class="sw" style="background:${COL[c]}"></span>${esc(p.title)}</td><td>${esc(p.author)}</td><td class="num">${p.date}</td><td class="l">${src}</td><td class="l">${early||'<span style="color:var(--ink-3)">–</span>'}</td><td class="l">${tx}</td><td class="num">${p.words?p.words.toLocaleString():''}</td></tr>`}).join('');
+    $('#tx-table').innerHTML=`<table class="texts-table"><thead><tr><th>play</th><th>author</th><th class="num">date</th><th>source edition</th><th>early printing</th><th>our text</th><th class="num">words</th></tr></thead><tbody>${rows}</tbody></table>`;
+    $('#tx-table').querySelectorAll('tr[data-id]').forEach(tr=>{tr.onclick=e=>{if(e.target.closest('a'))return;openPanel(tr.dataset.id)}});
+  }
+  $('#tx-filter').onchange=draw;draw();
+  const groups=[['doc','Report, notebook and corpus definitions'],['verify','Verification'],['classify','Classifiers'],['map','Distances and clustering'],['chars','Character models'],['scenes','Scene scan'],['idea','GPT-2 weight comparison'],['neural','GPT-2 behaviour']];
+  $('#tables-list').innerHTML=groups.map(([g,lab])=>{const ts=D.tables.filter(t=>t.section===g);if(!ts.length)return '';return `<div class="grp">${lab}</div>`+ts.map(t=>`<a href="${t.path}" target="_blank" rel="noopener">${esc(t.label)}</a>`).join('')}).join('')
+    +`<div class="grp">External sources</div>`+D.extra_sources.map(x=>`<a href="${x.url}" target="_blank" rel="noopener">${esc(x.label)}</a>`).join('');
+  // per-plate data links
+  document.querySelectorAll('.plate[data-sec]').forEach(pl=>{const ts=D.tables.filter(t=>t.section===pl.dataset.sec);if(!ts.length)return;const d=document.createElement('p');d.className='datalink';d.innerHTML='Data: '+ts.slice(0,3).map(t=>`<a href="${t.path}" target="_blank" rel="noopener">${esc(t.label)}</a>`).join(' · ');pl.appendChild(d)});
 })();
 })();
 </script>

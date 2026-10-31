@@ -70,6 +70,76 @@ out['tv_ep']=dict(names=tve['names'],cosine=[[round(x,3) for x in row] for row i
 # perplexity ep
 pp=json.load(open(P+'results/ep/finetune/perplexity.json'))
 out['ppl_ep']=pp
+
+# ---- links to sources and copies of texts / tables for the site ----
+import shutil
+SITE=os.path.dirname(os.path.abspath(__file__))
+FOLGER_SLUG={'1H6':'henry-vi-part-1','2H6':'henry-vi-part-2','3H6':'henry-vi-part-3','Tit':'titus-andronicus','R3':'richard-iii','Shr':'the-taming-of-the-shrew','TGV':'the-two-gentlemen-of-verona','Err':'the-comedy-of-errors','R2':'richard-ii','MND':'a-midsummer-nights-dream','Rom':'romeo-and-juliet','MV':'the-merchant-of-venice','1H4':'henry-iv-part-1','JC':'julius-caesar','Ham':'hamlet','Mac':'macbeth','Lr':'king-lear','WT':'the-winters-tale','Tmp':'the-tempest'}
+def tcp_of(w):
+    f=w.get('file','')
+    m=re.search(r'(A\d{5})\.xml$',f)
+    return m.group(1) if m else None
+qw={w['id']:w for w in json.load(open(P+'scripts/works_q.json'))}
+links={}
+for w in works:
+    if w['group']=='altsource': continue
+    L=[]
+    if w['source']=='folger':
+        L.append(dict(label='Folger Shakespeare, read online',url=f"https://www.folger.edu/explore/shakespeares-works/{FOLGER_SLUG[w['id']]}/read/",kind='source'))
+        L.append(dict(label='Folger plain-text download',url=f"https://flgr.sh/txtfss{w['id']}txt",kind='source'))
+    elif w['source']=='emed':
+        L.append(dict(label='Folger EMED edition',url=f"https://emed.folger.edu/{w['id']}",kind='source'))
+        L.append(dict(label='EMED TEI/XML (regularised spelling)',url=f"https://emed.folger.edu/sites/default/files/folger_encodings/xml/EMED-{w['id']}-3.xml",kind='source'))
+    elif w['source']=='earlyprint':
+        t=w.get('tcp') or tcp_of(w)
+        L.append(dict(label=f'EarlyPrint / EEBO-TCP {t}',url=f"https://texts.earlyprint.org/works/{t}.xml",kind='source'))
+    e=epw.get(w['id'])
+    if e and e.get('source')=='earlyprint':
+        t=tcp_of(e)
+        if t=='A11954': L.append(dict(label='1623 First Folio, EarlyPrint (TCP A11954)',url='https://texts.earlyprint.org/works/A11954.xml',kind='early'))
+        elif t and not any(t in x['url'] for x in L): L.append(dict(label=f'Early quarto, EarlyPrint (TCP {t})',url=f"https://texts.earlyprint.org/works/{t}.xml",kind='early'))
+    q=qw.get(w['id'])
+    if q:
+        t=tcp_of(q)
+        if t and not any(t in x['url'] for x in L): L.append(dict(label=f'Early quarto, EarlyPrint (TCP {t})'+(' · '+q['note'] if q.get('note') else ''),url=f"https://texts.earlyprint.org/works/{t}.xml",kind='early'))
+    texts={}
+    for corp,sub in (('main','clean'),('ep','clean_ep'),('q','clean_q')):
+        src=P+f'data/{sub}/{w["id"]}.txt'
+        if os.path.exists(src):
+            dst=os.path.join(SITE,f'texts_{corp}',w['id']+'.txt'); os.makedirs(os.path.dirname(dst),exist_ok=True); shutil.copyfile(src,dst)
+            texts[corp]=f'texts_{corp}/{w["id"]}.txt'
+    links[w['id']]=dict(links=L,texts=texts,source=w['source'],note=w.get('note',''))
+out['links']=links
+# gutenberg cross-check editions
+out['extra_sources']=[dict(label='Doctor Faustus, Dyce edition (Project Gutenberg 779)',url='https://www.gutenberg.org/ebooks/779'),dict(label='The Jew of Malta, Dyce edition (Project Gutenberg 901)',url='https://www.gutenberg.org/ebooks/901'),dict(label='EarlyPrint corpus metadata',url='https://earlyprint.org/'),dict(label='Folger Shakespeare downloads',url='https://www.folger.edu/explore/shakespeares-works/download/'),dict(label='Folger Early Modern English Drama (EMED)',url='https://emed.folger.edu/')]
+TABLES=[('results/gi_verify/gi_verify.md','Impostors verification, all plays (Folger/EMED corpus)','verify'),
+ ('results/ep/gi_verify/gi_verify.md','Impostors verification, all plays (all-EarlyPrint corpus)','verify'),
+ ('results/q/gi_verify/gi_verify.md','Impostors verification (quarto corpus)','verify'),
+ ('results/func/pairwise_distinguishability.md','Chunk classifiers, function words, with per-play probabilities','classify'),
+ ('results/ep/func/pairwise_distinguishability.md','Chunk classifiers, function words (all-EarlyPrint)','classify'),
+ ('results/func/group_distances.md','Group distances and clustering, function words','map'),
+ ('results/func/attribution_loo.md','Leave-one-play-out attribution, function words','map'),
+ ('results/func/distance_matrix_cosine_delta.csv','Full distance matrix, cosine delta, function words (CSV)','map'),
+ ('results/ep/crossentropy_masked/crossentropy.md','Character-model cross-entropy, names masked (all-EarlyPrint)','chars'),
+ ('results/ep/crossentropy_masked/affinity.md','Double-centred affinities between author models','chars'),
+ ('results/ep/crossentropy_masked/quarto_check.md','Folio vs quarto check for Titus and Richard III','chars'),
+ ('results/crossentropy_masked/edition_effect.md','Edition effect: same play, two editions','chars'),
+ ('results/q/crossentropy_masked/crossentropy.md','Character-model cross-entropy (quarto corpus)','chars'),
+ ('results/scene_scan/scene_scan.md','Scene scan of 1-3 Henry VI, Titus, Richard III','scenes'),
+ ('results/scene_scan/prose_verse.md','Verse-only and prose-only rescoring of Henry VI','scenes'),
+ ('results/finetune/taskvectors.md','GPT-2 weight-delta cosines (Folger/EMED)','idea'),
+ ('results/ep/finetune/taskvectors.md','GPT-2 weight-delta cosines (all-EarlyPrint)','idea'),
+ ('results/ep/finetune/perplexity.md','GPT-2 held-out bits per token (all-EarlyPrint)','neural'),
+ ('results/finetune/perplexity.md','GPT-2 held-out bits per token (Folger/EMED)','neural'),
+ ('REPORT.md','Full report, version 2','doc'),('NOTEBOOK.md','Lab notebook: every step, bug and change of mind','doc'),('README.md','How to rerun everything','doc'),
+ ('scripts/works.json','Corpus definition, Folger/EMED corpus','doc'),('scripts/works_ep.json','Corpus definition, all-EarlyPrint corpus','doc'),('scripts/works_q.json','Corpus definition, quarto corpus','doc')]
+tabs=[]
+for rel,label,sec in TABLES:
+    src=P+rel
+    if not os.path.exists(src): continue
+    dst=os.path.join(SITE,'data',rel); os.makedirs(os.path.dirname(dst),exist_ok=True); shutil.copyfile(src,dst)
+    tabs.append(dict(path='data/'+rel,label=label,section=sec))
+out['tables']=tabs
 json.dump(out,open(sys.argv[1],'w'))
 print({k:(len(v) if hasattr(v,'__len__') else v) for k,v in out.items()})
 print(out['mds_var']); print(list(pp.keys())); print(type(pp['bits']), list(pp['bits'])[:2] if isinstance(pp['bits'],dict) else pp['bits'][:1]); print(pp['models'])

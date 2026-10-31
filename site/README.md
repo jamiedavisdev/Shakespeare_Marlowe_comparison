@@ -9,7 +9,9 @@ every result. Published copy: https://claude.ai/artifact/HW36LyVAYhSprRwiVAwbXp
 |---|---|
 | `index.html` | the whole page: markup, CSS and chart code (hand-drawn SVG, no libraries). Loads `data.json` by relative `fetch`. |
 | `data.json` | every number the charts use, generated from `results/` by `extract.py`. Do not edit by hand. |
-| `extract.py` | rebuilds `data.json` from `scripts/works*.json` and `results/**`. Run after re-running any analysis. |
+| `extract.py` | rebuilds `data.json` from `scripts/works*.json` and `results/**`, and refreshes the copies below. Run after re-running any analysis. |
+| `texts_main/`, `texts_ep/`, `texts_q/` | the cleaned dialogue-only texts the analyses used, one file per play per corpus (copied from `data/clean*`). Linked from the play cards. |
+| `data/` | copies of the result tables, REPORT.md, NOTEBOOK.md and the corpus definitions that the page links to. |
 
 ## Regenerate the data
 
@@ -28,7 +30,7 @@ python3 -m http.server 8000 --directory site
 
 ## Deploy
 
-Copy `index.html` and `data.json` to any static host (GitHub Pages, Netlify, S3, nginx).
+Copy the whole folder except `extract.py` and this README to any static host (GitHub Pages, Netlify, S3, nginx).
 Fonts come from Google Fonts; everything else is inline. No build step.
 
 ## Editing notes
